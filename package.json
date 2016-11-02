@@ -1,0 +1,37 @@
+{
+  "name": "serverless-plugin-optimize",
+  "version": "1.0.0-rc.1",
+  "description": "Serverless plugin that bundles, babelifies and minifies your functions.",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "node_modules/.bin/standard src/**",
+    "lint:fix": "node_modules/.bin/standard --fix src/**"
+  },
+  "author": "Gonçalo Neves",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FidelLimited/serverless-plugin-optimize.git"
+  },
+  "keywords": [
+    "serverless plugin optimize handler",
+    "serverless optimizer",
+    "serverless plugin",
+    "lambda serverless",
+    "optimize lambda"
+  ],
+  "bugs": {
+    "url": "https://github.com/FidelLimited/serverless-plugin-optimize/issues"
+  },
+  "homepage": "https://github.com/FidelLimited/serverless-plugin-optimize#readme",
+  "dependencies": {
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.1",
+    "bluebird": "^3.4.6",
+    "fs-extra": "^0.30.0",
+    "uglifyify": "^3.0.4"
+  },
+  "devDependencies": {
+    "standard": "^8.5.0"
+  }
+}
