@@ -15,11 +15,18 @@ This plugin is a child of the great [serverless-optimizer-plugin](https://github
 npm install serverless-plugin-optimize babel-preset-es2015 --save-dev
 ```
 
-* Add the plugin to the `plugins` array in your Serverless `serverless.yml`, like this:
+* Add the plugin to the `plugins` array in your Serverless `serverless.yml`:
 
 ```yml
 plugins:
   - serverless-plugin-optimize
+```
+
+* Set your packages to be built individually to have smaller packages:
+
+```yml
+package:
+  individually: true
 ```
 
 * All done!
