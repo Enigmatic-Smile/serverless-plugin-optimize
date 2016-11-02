@@ -54,6 +54,14 @@ custom:
   	minify: false
 ```
 
+* **prefix** (default `_optimize`) - Folder to output bundle.
+
+```yml
+custom:
+  optimize:
+  	prefix: 'dist'
+```
+
 * **presets** (default `es2015`) - Array of Babel presets.
 
 ```yml
