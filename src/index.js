@@ -68,7 +68,7 @@ class Optimize {
 
       /** Babel presets */
       if (Array.isArray(this.custom.optimize.presets)) {
-        this.optimize.options.presets = this.optimize.options.presets.concat(this.custom.optimize.presets)
+        this.optimize.options.presets = this.custom.optimize.presets
       }
 
       /** Global unique excludes */
@@ -204,6 +204,9 @@ class Optimize {
       return BbPromise.resolve('optimization skipped')
     }
 
+    /** Log function to optimize */
+    this.serverless.cli.log('Optimize: ' + functionObject.name)
+
     /** Optimize object */
     let optimize = {
       bundle: functionBundle,
@@ -217,6 +220,7 @@ class Optimize {
     /** Function optimize options */
     let functionExclude = this.optimize.options.exclude
     let functionMinify = this.optimize.options.minify
+    let functionPresets = this.optimize.options.presets
     if (typeof functionObject.optimize === 'object') {
       /** Excludes */
       if (Array.isArray(functionObject.optimize.exclude)) {
@@ -226,6 +230,11 @@ class Optimize {
       /** Minify flag */
       if (typeof functionObject.optimize.minify === 'boolean') {
         functionMinify = optimize.minify = functionObject.optimize.minify
+      }
+
+      /** Babel presets */
+      if (Array.isArray(functionObject.optimize.presets)) {
+        functionPresets = optimize.presets = functionObject.optimize.presets
       }
     }
 
@@ -253,7 +262,7 @@ class Optimize {
 
     /** Browserify babelify transform */
     bundler.transform(babelify, {
-      presets: this.optimize.options.presets
+      presets: functionPresets
     })
 
     /** Browserify minify transform */
