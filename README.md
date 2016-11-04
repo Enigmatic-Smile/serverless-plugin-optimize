@@ -1,6 +1,9 @@
 Serverless Optimize Plugin
 =============================
-[![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)
+[![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com) 
+[![npm version](https://badge.fury.io/js/serverless-plugin-optimize.svg)](https://badge.fury.io/js/serverless-plugin-optimize)
+[![dependencies](https://img.shields.io/david/FidelLimited/serverless-plugin-optimize.svg)](https://www.npmjs.com/package/serverless-plugin-optimize)
+[![license](https://img.shields.io/npm/l/serverless-plugin-optimize.svg)](https://raw.githubusercontent.com/FidelLimited/serverless-plugin-optimize/master/LICENSE)
 
 Bundle with Browserify, transpile with Babel to ES5 and minify with Uglify your Serverless functions.
 
@@ -53,7 +56,7 @@ custom:
   	exclude: ['ajv']
 ```
 
-* **minify** (default `true`) - When mininify is set to `false` your functions won't be minified.
+* **minify** (default `true`) - When minify is set to `false` your functions won't be minified.
 
 ```yml
 custom:
@@ -79,7 +82,7 @@ custom:
 
 #### Function
 
-* **optimize** (default `true`) - When optimize is set to `false` the specific function won't be optimized.
+* **optimize** (default `true`) - When optimize is set to `false` the function won't be optimized.
 
 ```yml
 functions:
@@ -87,13 +90,31 @@ functions:
     optimize: false
 ```
 
-* **exclude** - Array of modules that will be excluded from the specific function.
+* **exclude** - Array of modules that will be excluded from the function.
 
 ```yml
 functions:
   hello:
     optimize:
       exclude: ['ajv']
+```
+
+* **minify** - When minify is set to `false` the function won't be minified.
+
+```yml
+functions:
+  hello:
+    optimize:
+      minify: false
+```
+
+* **presets** - Array of Babel presets for the function.
+
+```yml
+functions:
+  hello:
+    optimize:
+      presets: ['es2016']
 ```
 
 ## Contribute

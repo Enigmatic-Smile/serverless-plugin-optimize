@@ -68,12 +68,12 @@ class Optimize {
 
       /** Babel presets */
       if (Array.isArray(this.custom.optimize.presets)) {
-        this.optimize.options.presets = this.optimize.options.presets.concat(this.custom.optimize.presets)
+        this.optimize.options.presets = this.custom.optimize.presets
       }
 
-      /** Global unique excludes */
+      /** Global excludes */
       if (Array.isArray(this.custom.optimize.exclude)) {
-        this.optimize.options.exclude = this.optimize.options.exclude.concat(this.custom.optimize.exclude)
+        this.optimize.options.exclude = this.custom.optimize.exclude
       }
     }
 
@@ -204,6 +204,9 @@ class Optimize {
       return BbPromise.resolve('optimization skipped')
     }
 
+    /** Log function to optimize */
+    this.serverless.cli.log('Optimize: ' + functionObject.name)
+
     /** Optimize object */
     let optimize = {
       bundle: functionBundle,
@@ -214,11 +217,25 @@ class Optimize {
       }
     }
 
-    /** Setup function unique excludes */
-    let functionExclude = [].concat(this.optimize.options.exclude)
-    if (functionObject.optimize && Array.isArray(functionObject.optimize.exclude)) {
-      optimize.exclude = functionObject.optimize.exclude
-      functionExclude = functionExclude.concat(functionObject.optimize.exclude)
+    /** Function optimize options */
+    let functionExclude = this.optimize.options.exclude
+    let functionMinify = this.optimize.options.minify
+    let functionPresets = this.optimize.options.presets
+    if (typeof functionObject.optimize === 'object') {
+      /** Excludes */
+      if (Array.isArray(functionObject.optimize.exclude)) {
+        functionExclude = optimize.exclude = functionObject.optimize.exclude
+      }
+
+      /** Minify flag */
+      if (typeof functionObject.optimize.minify === 'boolean') {
+        functionMinify = optimize.minify = functionObject.optimize.minify
+      }
+
+      /** Babel presets */
+      if (Array.isArray(functionObject.optimize.presets)) {
+        functionPresets = optimize.presets = functionObject.optimize.presets
+      }
     }
 
     /** Browserify */
@@ -245,11 +262,11 @@ class Optimize {
 
     /** Browserify babelify transform */
     bundler.transform(babelify, {
-      presets: this.optimize.options.presets
+      presets: functionPresets
     })
 
     /** Browserify minify transform */
-    if (this.optimize.options.minify) {
+    if (functionMinify) {
       bundler.transform({
         global: true
       }, uglify)
@@ -275,9 +292,6 @@ class Optimize {
 
       /** Update package */
       functionObject.package = optimize.package
-
-      /** Log optimized function */
-      this.serverless.cli.log('Optimize: ' + functionObject.name)
     })
   }
 }
