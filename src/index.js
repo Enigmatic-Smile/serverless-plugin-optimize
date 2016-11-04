@@ -214,11 +214,19 @@ class Optimize {
       }
     }
 
-    /** Setup function unique excludes */
-    let functionExclude = [].concat(this.optimize.options.exclude)
-    if (functionObject.optimize && Array.isArray(functionObject.optimize.exclude)) {
-      optimize.exclude = functionObject.optimize.exclude
-      functionExclude = functionExclude.concat(functionObject.optimize.exclude)
+    /** Function optimize options */
+    let functionExclude = this.optimize.options.exclude
+    let functionMinify = this.optimize.options.minify
+    if (typeof functionObject.optimize === 'object') {
+      /** Excludes */
+      if (Array.isArray(functionObject.optimize.exclude)) {
+        functionExclude = optimize.exclude = functionObject.optimize.exclude
+      }
+
+      /** Minify flag */
+      if (typeof functionObject.optimize.minify === 'boolean') {
+        functionMinify = optimize.minify = functionObject.optimize.minify
+      }
     }
 
     /** Browserify */
@@ -249,7 +257,7 @@ class Optimize {
     })
 
     /** Browserify minify transform */
-    if (this.optimize.options.minify) {
+    if (functionMinify) {
       bundler.transform({
         global: true
       }, uglify)
@@ -275,9 +283,6 @@ class Optimize {
 
       /** Update package */
       functionObject.package = optimize.package
-
-      /** Log optimized function */
-      this.serverless.cli.log('Optimize: ' + functionObject.name)
     })
   }
 }
