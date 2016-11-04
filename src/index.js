@@ -71,9 +71,9 @@ class Optimize {
         this.optimize.options.presets = this.custom.optimize.presets
       }
 
-      /** Global unique excludes */
+      /** Global excludes */
       if (Array.isArray(this.custom.optimize.exclude)) {
-        this.optimize.options.exclude = this.optimize.options.exclude.concat(this.custom.optimize.exclude)
+        this.optimize.options.exclude = this.custom.optimize.exclude
       }
     }
 
