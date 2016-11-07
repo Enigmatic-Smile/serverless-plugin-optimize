@@ -213,7 +213,7 @@ class Optimize {
       handlerOriginal: functionObject.handler,
       handlerOptimize: functionOptimize + functionObject.handler.substring(functionFileIndex),
       package: {
-        exclude: ['!' + functionBundle]
+        exclude: ['!!**', '!' + functionBundle]
       }
     }
 
