@@ -221,7 +221,7 @@ class Optimize {
     let functionExclude = this.optimize.options.exclude
     let functionMinify = this.optimize.options.minify
     let functionPresets = this.optimize.options.presets
-    if (typeof functionObject.optimize === 'object') {
+    if (functionObject.optimize) {
       /** Excludes */
       if (Array.isArray(functionObject.optimize.exclude)) {
         functionExclude = optimize.exclude = functionObject.optimize.exclude
