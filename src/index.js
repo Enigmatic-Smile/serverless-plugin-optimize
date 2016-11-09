@@ -79,6 +79,8 @@ class Optimize {
 
     /** Serverless hooks */
     this.hooks = {
+      'after:deploy:function:deploy': this.afterCreateDeploymentArtifacts.bind(this),
+      'before:deploy:function:deploy': this.beforeCreateDeploymentArtifacts.bind(this),
       'after:deploy:createDeploymentArtifacts': this.afterCreateDeploymentArtifacts.bind(this),
       'before:deploy:createDeploymentArtifacts': this.beforeCreateDeploymentArtifacts.bind(this)
     }
@@ -101,8 +103,13 @@ class Optimize {
 
     /** Clean prefix folder */
     return this.cleanFolder().then(() => {
-      /** Optimize all functions */
-      return this.optimizeAllFunctions()
+      /** Optimize one function */
+      if (this.options.function) {
+        return this.optimizeFunction(this.options.function)
+      } else {
+        /** Optimize all functions */
+        return this.optimizeAllFunctions()
+      }
     })
   }
 
