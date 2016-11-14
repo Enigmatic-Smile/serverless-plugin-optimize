@@ -269,14 +269,15 @@ class Optimize {
 
     /** Browserify babelify transform */
     bundler.transform(babelify, {
+      global: functionMinify,
       presets: functionPresets
     })
 
     /** Browserify minify transform */
     if (functionMinify) {
-      bundler.transform({
+      bundler.transform(uglify, {
         global: true
-      }, uglify)
+      })
     }
 
     /** Generate bundle */
