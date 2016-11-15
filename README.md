@@ -80,6 +80,14 @@ custom:
   	presets: ['es2016']
 ```
 
+* **global** (default `true`) - When global is set to `false` babelify and uglify transforms won't be run globally.
+
+```yml
+custom:
+  optimize:
+    global: false
+```
+
 #### Function
 
 * **optimize** (default `true`) - When optimize is set to `false` the function won't be optimized.
@@ -115,6 +123,15 @@ functions:
   hello:
     optimize:
       presets: ['es2016']
+```
+
+* **global** - When global is set to `false` babelify and uglify transforms won't be run globally.
+
+```yml
+functions:
+  hello:
+    optimize:
+      global: false
 ```
 
 ## Contribute

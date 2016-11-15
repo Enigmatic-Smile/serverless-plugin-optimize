@@ -45,7 +45,8 @@ class Optimize {
         exclude: ['aws-sdk'],
         minify: true,
         prefix: '_optimize',
-        presets: ['es2015']
+        presets: ['es2015'],
+        global: true
       }
     }
 
@@ -74,6 +75,11 @@ class Optimize {
       /** Global excludes */
       if (Array.isArray(this.custom.optimize.exclude)) {
         this.optimize.options.exclude = this.custom.optimize.exclude
+      }
+
+      /** Global transforms */
+      if (this.custom.optimize.global === false) {
+        this.optimize.options.global = this.custom.optimize.global
       }
     }
 
@@ -228,6 +234,7 @@ class Optimize {
     let functionExclude = this.optimize.options.exclude
     let functionMinify = this.optimize.options.minify
     let functionPresets = this.optimize.options.presets
+    let functionGlobal = this.optimize.options.global
     if (functionObject.optimize) {
       /** Excludes */
       if (Array.isArray(functionObject.optimize.exclude)) {
@@ -242,6 +249,11 @@ class Optimize {
       /** Babel presets */
       if (Array.isArray(functionObject.optimize.presets)) {
         functionPresets = optimize.presets = functionObject.optimize.presets
+      }
+
+      /** Global transforms */
+      if (typeof functionObject.optimize.global === 'boolean') {
+        functionGlobal = optimize.global = functionObject.optimize.global
       }
     }
 
@@ -269,14 +281,15 @@ class Optimize {
 
     /** Browserify babelify transform */
     bundler.transform(babelify, {
+      global: functionGlobal,
       presets: functionPresets
     })
 
     /** Browserify minify transform */
     if (functionMinify) {
-      bundler.transform({
-        global: true
-      }, uglify)
+      bundler.transform(uglify, {
+        global: functionGlobal
+      })
     }
 
     /** Generate bundle */
