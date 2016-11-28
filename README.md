@@ -134,6 +134,13 @@ functions:
       global: false
 ```
 
+## Troubleshooting
+
+#### global - what it does?
+`global` is set by default to `true` enabling Browserify transforms (Babel and UglifyJS) to be run inside `node_modules`.
+Some node modules can break in this process and you may end up getting errors when running your optimized handler.
+To fix this, set `global` to `false` globally or inside function.
+
 ## Contribute
 
 Help us making this plugin better and future proof.
