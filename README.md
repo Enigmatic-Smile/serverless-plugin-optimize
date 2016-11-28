@@ -9,7 +9,7 @@ Bundle with Browserify, transpile with Babel to ES5 and minify with Uglify your 
 
 This plugin is a child of the great [serverless-optimizer-plugin](https://github.com/serverless/serverless-optimizer-plugin). Kudos!
 
-**Note:** Requires Serverless *v1.0.0* or higher.
+**Note:** Requires Serverless *v1.2.x* or higher.
 
 ## Setup
 
