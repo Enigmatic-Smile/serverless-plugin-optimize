@@ -97,8 +97,8 @@ class Optimize {
 
     /** Serverless hooks */
     this.hooks = {
-      'after:deploy:function:initialize': this.afterCreateDeploymentArtifacts.bind(this),
-      'before:deploy:function:initialize': this.beforeCreateDeploymentArtifacts.bind(this),
+      'after:deploy:function:packageFunction': this.afterCreateDeploymentArtifacts.bind(this),
+      'before:deploy:function:packageFunction': this.beforeCreateDeploymentArtifacts.bind(this),
       'after:deploy:createDeploymentArtifacts': this.afterCreateDeploymentArtifacts.bind(this),
       'before:deploy:createDeploymentArtifacts': this.beforeCreateDeploymentArtifacts.bind(this)
     }
