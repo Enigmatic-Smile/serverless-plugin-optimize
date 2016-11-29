@@ -1,6 +1,6 @@
 {
   "name": "serverless-plugin-optimize",
-  "version": "1.0.0-rc.9",
+  "version": "1.0.0-rc.10",
   "description": "Serverless plugin that bundles, babelifies and minifies your functions.",
   "main": "src/index.js",
   "scripts": {
