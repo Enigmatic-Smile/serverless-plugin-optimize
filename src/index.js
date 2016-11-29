@@ -44,7 +44,7 @@ class Optimize {
         debug: false,
         exclude: ['aws-sdk'],
         extensions: [],
-        global: true,
+        global: false,
         ignore: [],
         minify: true,
         prefix: '_optimize',
