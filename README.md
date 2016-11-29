@@ -36,7 +36,7 @@ package:
 
 ## Options
 
-Configuration options can be set globally in `custom` property and inside function in `optimize` property.
+Configuration options can be set globally in `custom` property and inside each function in `optimize` property. Function options overwrite global options.
 
 #### Global
 
@@ -48,7 +48,7 @@ custom:
     debug: true
 ```
 
-* **exclude** (default `aws-sdk`) - Array of modules that will be globally excluded from all the bundles.
+* **exclude** (default `['aws-sdk']`) - Array of modules or paths that will be excluded.
 
 ```yml
 custom:
@@ -56,7 +56,31 @@ custom:
   	exclude: ['ajv']
 ```
 
-* **minify** (default `true`) - When minify is set to `false` your functions won't be minified.
+* **extensions** (default `['.js', '.json']`) - Array of optional extra extensions modules that will be included.
+
+```yml
+custom:
+  optimize:
+  	extensions: ['.extension']
+```
+
+* **global** (default `true`) - When global is set to `false` transforms won't be run inside `node_modules`.
+
+```yml
+custom:
+  optimize:
+    global: false`
+```
+
+* **ignore** - Array of modules or paths that won't be transformed with Babelify and Uglify.
+
+```yml
+custom:
+  optimize:
+  	ignore: ['ajv']
+```
+
+* **minify** (default `true`) - When minify is set to `false` Uglify transform won't run.
 
 ```yml
 custom:
@@ -72,20 +96,12 @@ custom:
   	prefix: 'dist'
 ```
 
-* **presets** (default `es2015`) - Array of Babel presets.
+* **presets** (default `['es2015']`) - Array of Babel presets.
 
 ```yml
 custom:
   optimize:
   	presets: ['es2016']
-```
-
-* **global** (default `true`) - When global is set to `false` babelify and uglify transforms won't be run globally.
-
-```yml
-custom:
-  optimize:
-    global: false
 ```
 
 #### Function
@@ -98,7 +114,7 @@ functions:
     optimize: false
 ```
 
-* **exclude** - Array of modules that will be excluded from the function.
+* **exclude** - Array of modules or paths that will be excluded.
 
 ```yml
 functions:
@@ -107,25 +123,16 @@ functions:
       exclude: ['ajv']
 ```
 
-* **minify** - When minify is set to `false` the function won't be minified.
+* **extensions** - Array of optional extra extensions modules that will be included.
 
 ```yml
 functions:
   hello:
     optimize:
-      minify: false
+      extensions: ['.extension']
 ```
 
-* **presets** - Array of Babel presets for the function.
-
-```yml
-functions:
-  hello:
-    optimize:
-      presets: ['es2016']
-```
-
-* **global** - When global is set to `false` babelify and uglify transforms won't be run globally.
+* **global** - When global is set to `false` transforms won't be run inside `node_modules`.
 
 ```yml
 functions:
@@ -134,12 +141,32 @@ functions:
       global: false
 ```
 
-## Troubleshooting
+* **ignore** - Array of modules or paths that won't be transformed with Babelify and Uglify.
 
-#### global - what it does?
-`global` is set by default to `true` enabling Browserify transforms (Babel and UglifyJS) to be run inside `node_modules`.
-Some node modules can break in this process and you may end up getting errors when running your optimized handler.
-To fix this, set `global` to `false` globally or inside function.
+```yml
+functions:
+  hello:
+    optimize:
+      ignore: ['ajv']
+```
+
+* **minify** - When minify is set to `false` Uglify transform won't run.
+
+```yml
+functions:
+  hello:
+    optimize:
+      minify: false
+```
+
+* **presets** - Array of Babel presets.
+
+```yml
+functions:
+  hello:
+    optimize:
+      presets: ['es2016']
+```
 
 ## Contribute
 

@@ -43,10 +43,12 @@ class Optimize {
       options: {
         debug: false,
         exclude: ['aws-sdk'],
+        extensions: [],
+        global: true,
+        ignore: [],
         minify: true,
         prefix: '_optimize',
-        presets: ['es2015'],
-        global: true
+        presets: ['es2015']
       }
     }
 
@@ -55,6 +57,26 @@ class Optimize {
       /** Debug flag */
       if (this.custom.optimize.debug === true) {
         this.optimize.options.debug = this.custom.optimize.debug
+      }
+
+      /** Exclude */
+      if (Array.isArray(this.custom.optimize.exclude)) {
+        this.optimize.options.exclude = this.custom.optimize.exclude
+      }
+
+      /** Extensions */
+      if (Array.isArray(this.custom.optimize.extensions)) {
+        this.optimize.options.extensions = this.custom.optimize.extensions
+      }
+
+      /** Global transforms */
+      if (this.custom.optimize.global === false) {
+        this.optimize.options.global = this.custom.optimize.global
+      }
+
+      /** Ignore */
+      if (Array.isArray(this.custom.optimize.ignore)) {
+        this.optimize.options.ignore = this.custom.optimize.ignore
       }
 
       /** Minify flag */
@@ -71,22 +93,12 @@ class Optimize {
       if (Array.isArray(this.custom.optimize.presets)) {
         this.optimize.options.presets = this.custom.optimize.presets
       }
-
-      /** Global excludes */
-      if (Array.isArray(this.custom.optimize.exclude)) {
-        this.optimize.options.exclude = this.custom.optimize.exclude
-      }
-
-      /** Global transforms */
-      if (this.custom.optimize.global === false) {
-        this.optimize.options.global = this.custom.optimize.global
-      }
     }
 
     /** Serverless hooks */
     this.hooks = {
-      'after:deploy:function:initialize': this.afterCreateDeploymentArtifacts.bind(this),
-      'before:deploy:function:initialize': this.beforeCreateDeploymentArtifacts.bind(this),
+      'after:deploy:function:packageFunction': this.afterCreateDeploymentArtifacts.bind(this),
+      'before:deploy:function:packageFunction': this.beforeCreateDeploymentArtifacts.bind(this),
       'after:deploy:createDeploymentArtifacts': this.afterCreateDeploymentArtifacts.bind(this),
       'before:deploy:createDeploymentArtifacts': this.beforeCreateDeploymentArtifacts.bind(this)
     }
@@ -232,13 +244,30 @@ class Optimize {
 
     /** Function optimize options */
     let functionExclude = this.optimize.options.exclude
+    let functionExtensions = this.optimize.options.extensions
+    let functionGlobal = this.optimize.options.global
+    let functionIgnore = this.optimize.options.ignore
     let functionMinify = this.optimize.options.minify
     let functionPresets = this.optimize.options.presets
-    let functionGlobal = this.optimize.options.global
     if (functionObject.optimize) {
-      /** Excludes */
+      /** Exclude */
       if (Array.isArray(functionObject.optimize.exclude)) {
         functionExclude = optimize.exclude = functionObject.optimize.exclude
+      }
+
+      /** Extensions */
+      if (Array.isArray(functionObject.optimize.extensions)) {
+        functionExtensions = optimize.extensions = functionObject.optimize.extensions
+      }
+
+      /** Global transforms */
+      if (typeof functionObject.optimize.global === 'boolean') {
+        functionGlobal = optimize.global = functionObject.optimize.global
+      }
+
+      /** Ignore */
+      if (Array.isArray(functionObject.optimize.ignore)) {
+        functionIgnore = optimize.ignore = functionObject.optimize.ignore
       }
 
       /** Minify flag */
@@ -250,16 +279,12 @@ class Optimize {
       if (Array.isArray(functionObject.optimize.presets)) {
         functionPresets = optimize.presets = functionObject.optimize.presets
       }
-
-      /** Global transforms */
-      if (typeof functionObject.optimize.global === 'boolean') {
-        functionGlobal = optimize.global = functionObject.optimize.global
-      }
     }
 
     /** Browserify */
     const bundler = browserify({
       entries: [functionFile],
+      extensions: functionExtensions,
       standalone: 'handler',
       browserField: false,
       builtins: false,
@@ -282,13 +307,15 @@ class Optimize {
     /** Browserify babelify transform */
     bundler.transform(babelify, {
       global: functionGlobal,
+      ignore: functionIgnore,
       presets: functionPresets
     })
 
     /** Browserify minify transform */
     if (functionMinify) {
       bundler.transform(uglify, {
-        global: functionGlobal
+        global: functionGlobal,
+        ignore: functionIgnore
       })
     }
 
