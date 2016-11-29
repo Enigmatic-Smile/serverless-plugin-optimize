@@ -70,7 +70,7 @@ class Optimize {
       }
 
       /** Global transforms */
-      if (this.custom.optimize.global === false) {
+      if (typeof this.custom.optimize.global === 'boolean') {
         this.optimize.options.global = this.custom.optimize.global
       }
 
@@ -80,7 +80,7 @@ class Optimize {
       }
 
       /** Minify flag */
-      if (this.custom.optimize.minify === false) {
+      if (typeof this.custom.optimize.minify === 'boolean') {
         this.optimize.options.minify = this.custom.optimize.minify
       }
 
