@@ -72,12 +72,13 @@ custom:
     global: false`
 ```
 
-* **presets** (default `es2015`) - Array of Babel presets.
+* **ignore** - Array of modules or paths that won't be transformed with Babelify and Uglify.
 
 ```yml
 custom:
   optimize:
-  	presets: ['es2016']
+  	ignore: ['ajv']
+```
 
 * **minify** (default `true`) - When minify is set to `false` Uglify transform won't run.
 
@@ -94,6 +95,13 @@ custom:
   optimize:
   	prefix: 'dist'
 ```
+
+* **presets** (default `['es2015']`) - Array of Babel presets.
+
+```yml
+custom:
+  optimize:
+  	presets: ['es2016']
 ```
 
 #### Function
@@ -124,22 +132,23 @@ functions:
       extensions: ['.extension']
 ```
 
-* **presets** - Array of Babel presets for the function.
-
-```yml
-functions:
-  hello:
-    optimize:
-      presets: ['es2016']
-```
-
-* **global** - When global is set to `false` babelify and uglify transforms won't be run globally.
+* **global** - When global is set to `false` transforms won't be run inside `node_modules`.
 
 ```yml
 functions:
   hello:
     optimize:
       global: false
+```
+
+* **ignore** - Array of modules or paths that won't be transformed with Babelify and Uglify.
+
+```yml
+functions:
+  hello:
+    optimize:
+      ignore: ['ajv']
+```
 
 * **minify** - When minify is set to `false` Uglify transform won't run.
 
@@ -150,7 +159,14 @@ functions:
       minify: false
 ```
 
+* **presets** - Array of Babel presets.
 
+```yml
+functions:
+  hello:
+    optimize:
+      presets: ['es2016']
+```
 
 ## Contribute
 
