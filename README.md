@@ -56,12 +56,12 @@ custom:
   	exclude: ['ajv']
 ```
 
-* **minify** (default `true`) - When minify is set to `false` your functions won't be minified.
+* **extensions** (default `['.js', '.json']`) - Array of optional extra extensions modules that will be included.
 
 ```yml
 custom:
   optimize:
-  	minify: false
+  	extensions: ['.extension']
 ```
 
 * **prefix** (default `_optimize`) - Folder to output bundle.
@@ -78,6 +78,13 @@ custom:
 custom:
   optimize:
   	presets: ['es2016']
+
+* **minify** (default `true`) - When minify is set to `false` Uglify transform won't run.
+
+```yml
+custom:
+  optimize:
+  	minify: false
 ```
 
 * **global** (default `true`) - When global is set to `false` babelify and uglify transforms won't be run globally.
@@ -107,13 +114,13 @@ functions:
       exclude: ['ajv']
 ```
 
-* **minify** - When minify is set to `false` the function won't be minified.
+* **extensions** - Array of optional extra extensions modules that will be included.
 
 ```yml
 functions:
   hello:
     optimize:
-      minify: false
+      extensions: ['.extension']
 ```
 
 * **presets** - Array of Babel presets for the function.
@@ -132,6 +139,14 @@ functions:
   hello:
     optimize:
       global: false
+
+* **minify** - When minify is set to `false` Uglify transform won't run.
+
+```yml
+functions:
+  hello:
+    optimize:
+      minify: false
 ```
 
 ## Troubleshooting

@@ -43,6 +43,7 @@ class Optimize {
       options: {
         debug: false,
         exclude: ['aws-sdk'],
+        extensions: [],
         minify: true,
         prefix: '_optimize',
         presets: ['es2015'],
@@ -55,6 +56,11 @@ class Optimize {
       /** Debug flag */
       if (this.custom.optimize.debug === true) {
         this.optimize.options.debug = this.custom.optimize.debug
+      }
+
+      /** Extensions */
+      if (Array.isArray(this.custom.optimize.extensions)) {
+        this.optimize.options.extensions = this.custom.optimize.extensions
       }
 
       /** Minify flag */
@@ -232,6 +238,7 @@ class Optimize {
 
     /** Function optimize options */
     let functionExclude = this.optimize.options.exclude
+    let functionExtensions = this.optimize.options.extensions
     let functionMinify = this.optimize.options.minify
     let functionPresets = this.optimize.options.presets
     let functionGlobal = this.optimize.options.global
@@ -241,6 +248,10 @@ class Optimize {
         functionExclude = optimize.exclude = functionObject.optimize.exclude
       }
 
+      /** Extensions */
+      if (Array.isArray(functionObject.optimize.extensions)) {
+        functionExtensions = optimize.extensions = functionObject.optimize.extensions
+      }
       /** Minify flag */
       if (typeof functionObject.optimize.minify === 'boolean') {
         functionMinify = optimize.minify = functionObject.optimize.minify
@@ -260,6 +271,7 @@ class Optimize {
     /** Browserify */
     const bundler = browserify({
       entries: [functionFile],
+      extensions: functionExtensions,
       standalone: 'handler',
       browserField: false,
       builtins: false,
