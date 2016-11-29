@@ -36,7 +36,7 @@ package:
 
 ## Options
 
-Configuration options can be set globally in `custom` property and inside function in `optimize` property.
+Configuration options can be set globally in `custom` property and inside each function in `optimize` property. Function options overwrite global options.
 
 #### Global
 
@@ -48,7 +48,7 @@ custom:
     debug: true
 ```
 
-* **exclude** (default `aws-sdk`) - Array of modules that will be globally excluded from all the bundles.
+* **exclude** (default `['aws-sdk']`) - Array of modules or paths that will be excluded.
 
 ```yml
 custom:
@@ -64,12 +64,12 @@ custom:
   	extensions: ['.extension']
 ```
 
-* **prefix** (default `_optimize`) - Folder to output bundle.
+* **global** (default `true`) - When global is set to `false` transforms won't be run inside `node_modules`.
 
 ```yml
 custom:
   optimize:
-  	prefix: 'dist'
+    global: false`
 ```
 
 * **presets** (default `es2015`) - Array of Babel presets.
@@ -87,12 +87,13 @@ custom:
   	minify: false
 ```
 
-* **global** (default `true`) - When global is set to `false` babelify and uglify transforms won't be run globally.
+* **prefix** (default `_optimize`) - Folder to output bundle.
 
 ```yml
 custom:
   optimize:
-    global: false
+  	prefix: 'dist'
+```
 ```
 
 #### Function
@@ -105,7 +106,7 @@ functions:
     optimize: false
 ```
 
-* **exclude** - Array of modules that will be excluded from the function.
+* **exclude** - Array of modules or paths that will be excluded.
 
 ```yml
 functions:
@@ -149,12 +150,7 @@ functions:
       minify: false
 ```
 
-## Troubleshooting
 
-#### global - what it does?
-`global` is set by default to `true` enabling Browserify transforms (Babel and UglifyJS) to be run inside `node_modules`.
-Some node modules can break in this process and you may end up getting errors when running your optimized handler.
-To fix this, set `global` to `false` globally or inside function.
 
 ## Contribute
 
