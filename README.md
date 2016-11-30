@@ -46,6 +46,7 @@ Configuration options can be set globally in `custom` property and inside each f
 * **global** (default `false`) - When global is set to `true` transforms will run inside `node_modules`.
 * **ignore** - Array of modules or paths that won't be transformed with Babelify and Uglify.
 * **minify** (default `true`) - When minify is set to `false` Uglify transform won't run.
+* **plugins** - Array of Babel plugins.
 * **prefix** (default `_optimize`) - Folder to output bundle.
 * **presets** (default `['es2015']`) - Array of Babel presets.
 
@@ -59,6 +60,7 @@ custom:
     ignore: ['ajv']
   	minify: false
   	prefix: 'dist'
+  	plugins: ['transform-decorators-legacy']
   	presets: ['es2016']
 ```
 
@@ -77,6 +79,7 @@ functions:
 * **global** - When global is set to `true` transforms will run inside `node_modules`.
 * **ignore** - Array of modules or paths that won't be transformed with Babelify and Uglify.
 * **minify** - When minify is set to `false` Uglify transform won't run.
+* **plugins** - Array of Babel plugins.
 * **presets** - Array of Babel presets.
 
 ```yml
@@ -88,6 +91,7 @@ functions:
       global: false
       ignore: ['ajv']
       minify: false
+      plugins: ['transform-decorators-legacy']
       presets: ['es2016']
 ```
 

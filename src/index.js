@@ -47,6 +47,7 @@ class Optimize {
         global: false,
         ignore: [],
         minify: true,
+        plugins: [],
         prefix: '_optimize',
         presets: ['es2015']
       }
@@ -82,6 +83,11 @@ class Optimize {
       /** Minify flag */
       if (typeof this.custom.optimize.minify === 'boolean') {
         this.optimize.options.minify = this.custom.optimize.minify
+      }
+
+      /** Babel plugins */
+      if (Array.isArray(this.custom.optimize.plugins)) {
+        this.optimize.options.plugins = this.custom.optimize.plugins
       }
 
       /** Optimize prefix */
@@ -243,48 +249,57 @@ class Optimize {
     }
 
     /** Function optimize options */
-    let functionExclude = this.optimize.options.exclude
-    let functionExtensions = this.optimize.options.extensions
-    let functionGlobal = this.optimize.options.global
-    let functionIgnore = this.optimize.options.ignore
-    let functionMinify = this.optimize.options.minify
-    let functionPresets = this.optimize.options.presets
+    let functionOptions = {
+      exclude: this.optimize.options.exclude,
+      extensions: this.optimize.options.extensions,
+      global: this.optimize.options.global,
+      ignore: this.optimize.options.ignore,
+      minify: this.optimize.options.minify,
+      plugins: this.optimize.options.plugins,
+      presets: this.optimize.options.presets
+    }
+
     if (functionObject.optimize) {
       /** Exclude */
       if (Array.isArray(functionObject.optimize.exclude)) {
-        functionExclude = optimize.exclude = functionObject.optimize.exclude
+        functionOptions.exclude = optimize.exclude = functionObject.optimize.exclude
       }
 
       /** Extensions */
       if (Array.isArray(functionObject.optimize.extensions)) {
-        functionExtensions = optimize.extensions = functionObject.optimize.extensions
+        functionOptions.extensions = optimize.extensions = functionObject.optimize.extensions
       }
 
       /** Global transforms */
       if (typeof functionObject.optimize.global === 'boolean') {
-        functionGlobal = optimize.global = functionObject.optimize.global
+        functionOptions.global = optimize.global = functionObject.optimize.global
       }
 
       /** Ignore */
       if (Array.isArray(functionObject.optimize.ignore)) {
-        functionIgnore = optimize.ignore = functionObject.optimize.ignore
+        functionOptions.ignore = optimize.ignore = functionObject.optimize.ignore
       }
 
       /** Minify flag */
       if (typeof functionObject.optimize.minify === 'boolean') {
-        functionMinify = optimize.minify = functionObject.optimize.minify
+        functionOptions.minify = optimize.minify = functionObject.optimize.minify
+      }
+
+      /** Babel plugins */
+      if (Array.isArray(functionObject.optimize.plugins)) {
+        functionOptions.plugins = optimize.plugins = functionObject.optimize.plugins
       }
 
       /** Babel presets */
       if (Array.isArray(functionObject.optimize.presets)) {
-        functionPresets = optimize.presets = functionObject.optimize.presets
+        functionOptions.presets = optimize.presets = functionObject.optimize.presets
       }
     }
 
     /** Browserify */
     const bundler = browserify({
       entries: [functionFile],
-      extensions: functionExtensions,
+      extensions: functionOptions.extensions,
       standalone: 'handler',
       browserField: false,
       builtins: false,
@@ -300,22 +315,23 @@ class Optimize {
     })
 
     /** Browserify exclude */
-    functionExclude.forEach((exclusion) => {
+    functionOptions.exclude.forEach((exclusion) => {
       bundler.exclude(exclusion)
     })
 
     /** Browserify babelify transform */
     bundler.transform(babelify, {
-      global: functionGlobal,
-      ignore: functionIgnore,
-      presets: functionPresets
+      global: functionOptions.global,
+      ignore: functionOptions.ignore,
+      plugins: functionOptions.plugins,
+      presets: functionOptions.presets
     })
 
     /** Browserify minify transform */
-    if (functionMinify) {
+    if (functionOptions.minify) {
       bundler.transform(uglify, {
-        global: functionGlobal,
-        ignore: functionIgnore
+        global: functionOptions.global,
+        ignore: functionOptions.ignore
       })
     }
 
