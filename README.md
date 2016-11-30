@@ -45,6 +45,7 @@ Configuration options can be set globally in `custom` property and inside each f
 * **extensions** (default `['.js', '.json']`) - Array of optional extra extensions modules that will be included.
 * **global** (default `false`) - When global is set to `true` transforms will run inside `node_modules`.
 * **ignore** - Array of modules or paths that won't be transformed with Babelify and Uglify.
+* **includePaths** - Array of file paths that will be included in the bundle package.
 * **minify** (default `true`) - When minify is set to `false` Uglify transform won't run.
 * **plugins** - Array of Babel plugins.
 * **prefix** (default `_optimize`) - Folder to output bundle.
@@ -58,6 +59,7 @@ custom:
   	extensions: ['.extension']
     global: true
     ignore: ['ajv']
+    includePaths: ['bin/some-binary-file']
   	minify: false
   	prefix: 'dist'
   	plugins: ['transform-decorators-legacy']
@@ -78,6 +80,7 @@ functions:
 * **extensions** - Array of optional extra extensions modules that will be included.
 * **global** - When global is set to `true` transforms will run inside `node_modules`.
 * **ignore** - Array of modules or paths that won't be transformed with Babelify and Uglify.
+* **includePaths** - Array of file paths that will be included in the bundle package.
 * **minify** - When minify is set to `false` Uglify transform won't run.
 * **plugins** - Array of Babel plugins.
 * **presets** - Array of Babel presets.
@@ -90,6 +93,7 @@ functions:
       extensions: ['.extension']
       global: false
       ignore: ['ajv']
+      includePaths: ['bin/some-binary-file']
       minify: false
       plugins: ['transform-decorators-legacy']
       presets: ['es2016']

@@ -45,6 +45,7 @@ class Optimize {
         exclude: ['aws-sdk'],
         extensions: [],
         global: false,
+        includePaths: [],
         ignore: [],
         minify: true,
         plugins: [],
@@ -73,6 +74,11 @@ class Optimize {
       /** Global transforms */
       if (typeof this.custom.optimize.global === 'boolean') {
         this.optimize.options.global = this.custom.optimize.global
+      }
+
+      /** Include paths */
+      if (Array.isArray(this.custom.optimize.includePaths)) {
+        this.optimize.options.includePaths = this.custom.optimize.includePaths
       }
 
       /** Ignore */
@@ -226,9 +232,11 @@ class Optimize {
     const functionObject = this.serverless.service.getFunction(functionName)
     functionObject.package = functionObject.package || {}
     const functionFileIndex = functionObject.handler.lastIndexOf('.')
-    const functionFile = this.getPath(functionObject.handler.substring(0, functionFileIndex) + '.js')
-    const functionOptimize = this.optimize.options.prefix + '/' + functionObject.name
-    const functionBundle = functionOptimize + '.js'
+    const functionPath = functionObject.handler.substring(0, functionFileIndex)
+    const functionFile = this.getPath(functionPath + '.js')
+    const functionOptimizePath = this.optimize.options.prefix + '/' + functionObject.name
+    const functionOptimizeHandler = functionOptimizePath + '/' + functionPath
+    const functionBundle = this.getPath(functionOptimizeHandler + '.js')
 
     /** Skip function */
     if (functionObject.optimize === false) {
@@ -242,9 +250,10 @@ class Optimize {
     let optimize = {
       bundle: functionBundle,
       handlerOriginal: functionObject.handler,
-      handlerOptimize: functionOptimize + functionObject.handler.substring(functionFileIndex),
+      handlerOptimize: functionOptimizeHandler + functionObject.handler.substring(functionFileIndex),
       package: {
-        exclude: ['!!**', '!' + functionBundle]
+        exclude: ['**'],
+        include: [functionOptimizePath + '/**']
       }
     }
 
@@ -253,6 +262,7 @@ class Optimize {
       exclude: this.optimize.options.exclude,
       extensions: this.optimize.options.extensions,
       global: this.optimize.options.global,
+      includePaths: this.optimize.options.includePaths,
       ignore: this.optimize.options.ignore,
       minify: this.optimize.options.minify,
       plugins: this.optimize.options.plugins,
@@ -273,6 +283,11 @@ class Optimize {
       /** Global transforms */
       if (typeof functionObject.optimize.global === 'boolean') {
         functionOptions.global = optimize.global = functionObject.optimize.global
+      }
+
+      /** Include paths */
+      if (Array.isArray(functionObject.optimize.includePaths)) {
+        functionOptions.includePaths = optimize.includePaths = functionObject.optimize.includePaths
       }
 
       /** Ignore */
@@ -346,6 +361,19 @@ class Optimize {
         /** Write bundle */
         resolve(fs.outputFileAsync(functionBundle, buff.toString()))
       })
+    }).then(() => {
+      /** Copy includePaths files to prefix folder */
+      if (functionOptions.includePaths.length) {
+        return BbPromise.map(functionOptions.includePaths, (includePath) => {
+          /** Remove relative dot */
+          if (includePath.substring(0, 2) === './') {
+            includePath = includePath.substring(2)
+          }
+
+          /** Copy file */
+          return fs.copyAsync(this.getPath(includePath), this.getPath(functionOptimizePath + '/' + includePath))
+        })
+      }
     }).then(() => {
       /** Add optimized function to functions array */
       this.optimize.functions.push(optimize)
