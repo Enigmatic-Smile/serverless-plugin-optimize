@@ -45,8 +45,10 @@ class Optimize {
         exclude: ['aws-sdk'],
         extensions: [],
         global: false,
+        includePaths: [],
         ignore: [],
         minify: true,
+        plugins: [],
         prefix: '_optimize',
         presets: ['es2015']
       }
@@ -74,6 +76,11 @@ class Optimize {
         this.optimize.options.global = this.custom.optimize.global
       }
 
+      /** Include paths */
+      if (Array.isArray(this.custom.optimize.includePaths)) {
+        this.optimize.options.includePaths = this.custom.optimize.includePaths
+      }
+
       /** Ignore */
       if (Array.isArray(this.custom.optimize.ignore)) {
         this.optimize.options.ignore = this.custom.optimize.ignore
@@ -82,6 +89,11 @@ class Optimize {
       /** Minify flag */
       if (typeof this.custom.optimize.minify === 'boolean') {
         this.optimize.options.minify = this.custom.optimize.minify
+      }
+
+      /** Babel plugins */
+      if (Array.isArray(this.custom.optimize.plugins)) {
+        this.optimize.options.plugins = this.custom.optimize.plugins
       }
 
       /** Optimize prefix */
@@ -220,9 +232,11 @@ class Optimize {
     const functionObject = this.serverless.service.getFunction(functionName)
     functionObject.package = functionObject.package || {}
     const functionFileIndex = functionObject.handler.lastIndexOf('.')
-    const functionFile = this.getPath(functionObject.handler.substring(0, functionFileIndex) + '.js')
-    const functionOptimize = this.optimize.options.prefix + '/' + functionObject.name
-    const functionBundle = functionOptimize + '.js'
+    const functionPath = functionObject.handler.substring(0, functionFileIndex)
+    const functionFile = this.getPath(functionPath + '.js')
+    const functionOptimizePath = this.optimize.options.prefix + '/' + functionObject.name
+    const functionOptimizeHandler = functionOptimizePath + '/' + functionPath
+    const functionBundle = this.getPath(functionOptimizeHandler + '.js')
 
     /** Skip function */
     if (functionObject.optimize === false) {
@@ -236,55 +250,71 @@ class Optimize {
     let optimize = {
       bundle: functionBundle,
       handlerOriginal: functionObject.handler,
-      handlerOptimize: functionOptimize + functionObject.handler.substring(functionFileIndex),
+      handlerOptimize: functionOptimizeHandler + functionObject.handler.substring(functionFileIndex),
       package: {
-        exclude: ['!!**', '!' + functionBundle]
+        exclude: ['**'],
+        include: [functionOptimizePath + '/**']
       }
     }
 
     /** Function optimize options */
-    let functionExclude = this.optimize.options.exclude
-    let functionExtensions = this.optimize.options.extensions
-    let functionGlobal = this.optimize.options.global
-    let functionIgnore = this.optimize.options.ignore
-    let functionMinify = this.optimize.options.minify
-    let functionPresets = this.optimize.options.presets
+    let functionOptions = {
+      exclude: this.optimize.options.exclude,
+      extensions: this.optimize.options.extensions,
+      global: this.optimize.options.global,
+      includePaths: this.optimize.options.includePaths,
+      ignore: this.optimize.options.ignore,
+      minify: this.optimize.options.minify,
+      plugins: this.optimize.options.plugins,
+      presets: this.optimize.options.presets
+    }
+
     if (functionObject.optimize) {
       /** Exclude */
       if (Array.isArray(functionObject.optimize.exclude)) {
-        functionExclude = optimize.exclude = functionObject.optimize.exclude
+        functionOptions.exclude = optimize.exclude = functionObject.optimize.exclude
       }
 
       /** Extensions */
       if (Array.isArray(functionObject.optimize.extensions)) {
-        functionExtensions = optimize.extensions = functionObject.optimize.extensions
+        functionOptions.extensions = optimize.extensions = functionObject.optimize.extensions
       }
 
       /** Global transforms */
       if (typeof functionObject.optimize.global === 'boolean') {
-        functionGlobal = optimize.global = functionObject.optimize.global
+        functionOptions.global = optimize.global = functionObject.optimize.global
+      }
+
+      /** Include paths */
+      if (Array.isArray(functionObject.optimize.includePaths)) {
+        functionOptions.includePaths = optimize.includePaths = functionObject.optimize.includePaths
       }
 
       /** Ignore */
       if (Array.isArray(functionObject.optimize.ignore)) {
-        functionIgnore = optimize.ignore = functionObject.optimize.ignore
+        functionOptions.ignore = optimize.ignore = functionObject.optimize.ignore
       }
 
       /** Minify flag */
       if (typeof functionObject.optimize.minify === 'boolean') {
-        functionMinify = optimize.minify = functionObject.optimize.minify
+        functionOptions.minify = optimize.minify = functionObject.optimize.minify
+      }
+
+      /** Babel plugins */
+      if (Array.isArray(functionObject.optimize.plugins)) {
+        functionOptions.plugins = optimize.plugins = functionObject.optimize.plugins
       }
 
       /** Babel presets */
       if (Array.isArray(functionObject.optimize.presets)) {
-        functionPresets = optimize.presets = functionObject.optimize.presets
+        functionOptions.presets = optimize.presets = functionObject.optimize.presets
       }
     }
 
     /** Browserify */
     const bundler = browserify({
       entries: [functionFile],
-      extensions: functionExtensions,
+      extensions: functionOptions.extensions,
       standalone: 'handler',
       browserField: false,
       builtins: false,
@@ -300,22 +330,23 @@ class Optimize {
     })
 
     /** Browserify exclude */
-    functionExclude.forEach((exclusion) => {
+    functionOptions.exclude.forEach((exclusion) => {
       bundler.exclude(exclusion)
     })
 
     /** Browserify babelify transform */
     bundler.transform(babelify, {
-      global: functionGlobal,
-      ignore: functionIgnore,
-      presets: functionPresets
+      global: functionOptions.global,
+      ignore: functionOptions.ignore,
+      plugins: functionOptions.plugins,
+      presets: functionOptions.presets
     })
 
     /** Browserify minify transform */
-    if (functionMinify) {
+    if (functionOptions.minify) {
       bundler.transform(uglify, {
-        global: functionGlobal,
-        ignore: functionIgnore
+        global: functionOptions.global,
+        ignore: functionOptions.ignore
       })
     }
 
@@ -330,6 +361,19 @@ class Optimize {
         /** Write bundle */
         resolve(fs.outputFileAsync(functionBundle, buff.toString()))
       })
+    }).then(() => {
+      /** Copy includePaths files to prefix folder */
+      if (functionOptions.includePaths.length) {
+        return BbPromise.map(functionOptions.includePaths, (includePath) => {
+          /** Remove relative dot */
+          if (includePath.substring(0, 2) === './') {
+            includePath = includePath.substring(2)
+          }
+
+          /** Copy file */
+          return fs.copyAsync(this.getPath(includePath), this.getPath(functionOptimizePath + '/' + includePath))
+        })
+      }
     }).then(() => {
       /** Add optimized function to functions array */
       this.optimize.functions.push(optimize)
