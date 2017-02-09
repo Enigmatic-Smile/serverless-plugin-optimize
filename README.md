@@ -45,7 +45,7 @@ Configuration options can be set globally in `custom` property and inside each f
 * **extensions** (default `['.js', '.json']`) - Array of optional extra extensions modules that will be included.
 * **global** (default `false`) - When global is set to `true` transforms will run inside `node_modules`.
 * **ignore** - Array of modules or paths that won't be transformed with Babelify and Uglify.
-* **includePaths** - Array of file paths that will be included in the bundle package.
+* **includePaths** - Array of file paths that will be included in the bundle package. Read [here](#includepaths-files) how to call these files.
 * **minify** (default `true`) - When minify is set to `false` Uglify transform won't run.
 * **plugins** - Array of Babel plugins.
 * **prefix** (default `_optimize`) - Folder to output bundle.
@@ -80,7 +80,7 @@ functions:
 * **extensions** - Array of optional extra extensions modules that will be included.
 * **global** - When global is set to `true` transforms will run inside `node_modules`.
 * **ignore** - Array of modules or paths that won't be transformed with Babelify and Uglify.
-* **includePaths** - Array of file paths that will be included in the bundle package.
+* **includePaths** - Array of file paths that will be included in the bundle package. Read [here](#includepaths-files) how to call these files.
 * **minify** - When minify is set to `false` Uglify transform won't run.
 * **plugins** - Array of Babel plugins.
 * **presets** - Array of Babel presets.
@@ -95,9 +95,17 @@ functions:
       ignore: ['ajv']
       includePaths: ['bin/some-binary-file']
       minify: false
-      plugins: ['transform-decorators-legacy']
-      presets: ['es2016']
+      plugins: ['transform-decorators-legacy']
+      presets: ['es2016']
 ```
+
+#### includePaths Files
+
+There is a difference you must know between calling files locally and after optimization with `includePaths`.
+
+When Optimize packages your functions, it bundles them inside `/${prefix}/${functionName}/...` and when your lambda function runs in AWS it will run from root `/var/task/${prefix}/${functionName}/...` and your `CWD` will be `/var/task/`.
+
+Solution in [#32](https://github.com/FidelLimited/serverless-plugin-optimize/issues/32#issuecomment-278432399) by @hlegendre. `path.resolve(process.env.LAMBDA_TASK_ROOT, ${prefix}, process.env.AWS_LAMBDA_FUNCTION_NAME, ${includePathFile})`.
 
 ## Contribute
 
