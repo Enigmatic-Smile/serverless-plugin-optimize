@@ -43,6 +43,7 @@ Configuration options can be set globally in `custom` property and inside each f
 * **debug** (default `false`) - When debug is set to `true` it won't remove `prefix` folder and will generate debug output at the end of package creation.
 * **exclude** (default `['aws-sdk']`) - Array of modules or paths that will be excluded.
 * **extensions** (default `['.js', '.json']`) - Array of optional extra extensions modules that will be included.
+* **external** Object key value pair of external module name and path. Note that external modules will require it's dependencies within it's directory. (`cd external_modules/sharp && npm i --prod`)
 * **global** (default `false`) - When global is set to `true` transforms will run inside `node_modules`.
 * **ignore** - Array of modules or paths that won't be transformed with Babelify and Uglify.
 * **includePaths** - Array of file paths that will be included in the bundle package. Read [here](#includepaths-files) how to call these files.
@@ -57,6 +58,8 @@ custom:
     debug: true
     exclude: ['ajv']
   	extensions: ['.extension']
+    external:
+      sharp: 'external_modules/sharp'
     global: true
     ignore: ['ajv']
     includePaths: ['bin/some-binary-file']
@@ -78,6 +81,7 @@ functions:
 
 * **exclude** - Array of modules or paths that will be excluded.
 * **extensions** - Array of optional extra extensions modules that will be included.
+* **external** Object key value pair of external module name and path. Note that external modules will require it's dependencies within it's directory. (`cd external_modules/sharp && npm i --prod`)
 * **global** - When global is set to `true` transforms will run inside `node_modules`.
 * **ignore** - Array of modules or paths that won't be transformed with Babelify and Uglify.
 * **includePaths** - Array of file paths that will be included in the bundle package. Read [here](#includepaths-files) how to call these files.
@@ -91,6 +95,8 @@ functions:
     optimize:
       exclude: ['ajv']
       extensions: ['.extension']
+      external:
+        sharp: 'external_modules/sharp'
       global: false
       ignore: ['ajv']
       includePaths: ['bin/some-binary-file']

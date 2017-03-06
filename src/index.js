@@ -43,6 +43,7 @@ class Optimize {
       options: {
         debug: false,
         exclude: ['aws-sdk'],
+        external: {},
         extensions: [],
         global: false,
         includePaths: [],
@@ -64,6 +65,11 @@ class Optimize {
       /** Exclude */
       if (Array.isArray(this.custom.optimize.exclude)) {
         this.optimize.options.exclude = this.custom.optimize.exclude
+      }
+
+      /** External */
+      if (typeof this.custom.optimize.external === 'object') {
+        this.optimize.options.external = this.custom.optimize.external
       }
 
       /** Extensions */
@@ -237,6 +243,9 @@ class Optimize {
     const functionOptimizePath = this.optimize.options.prefix + '/' + functionObject.name
     const functionOptimizeHandler = functionOptimizePath + '/' + functionPath
     const functionBundle = this.getPath(functionOptimizeHandler + '.js')
+    const functionDir = functionPath.substring(0, functionPath.lastIndexOf('/'))
+    const functionModulesDir = functionDir + '/' + 'node_modules'
+    const functionModulesOptimizeDir = functionOptimizePath + '/' + functionModulesDir
 
     /** Skip function */
     if (functionObject.optimize === false) {
@@ -260,6 +269,7 @@ class Optimize {
     /** Function optimize options */
     let functionOptions = {
       exclude: this.optimize.options.exclude,
+      external: Object.assign({}, this.optimize.options.external),
       extensions: this.optimize.options.extensions,
       global: this.optimize.options.global,
       includePaths: this.optimize.options.includePaths,
@@ -273,6 +283,11 @@ class Optimize {
       /** Exclude */
       if (Array.isArray(functionObject.optimize.exclude)) {
         functionOptions.exclude = optimize.exclude = functionObject.optimize.exclude
+      }
+
+      /** External */
+      if (typeof functionObject.optimize.external === 'object') {
+        functionOptions.external = optimize.external = functionObject.optimize.external
       }
 
       /** Extensions */
@@ -334,6 +349,16 @@ class Optimize {
       bundler.exclude(exclusion)
     })
 
+    /** Browserify external */
+    const funcDependencies = Object.keys(JSON.parse(fs.readFileSync(functionDir + '/package.json')).dependencies)
+    Object.keys(functionOptions.external).map((moduleName) => {
+      if (funcDependencies.indexOf(moduleName) >= 0) {
+        bundler.external(moduleName)
+      } else {
+        delete functionOptions.external[moduleName]
+      }
+    })
+
     /** Browserify babelify transform */
     bundler.transform(babelify, {
       global: functionOptions.global,
@@ -372,6 +397,19 @@ class Optimize {
 
           /** Copy file */
           return fs.copyAsync(this.getPath(includePath), this.getPath(functionOptimizePath + '/' + includePath))
+        })
+      }
+    }).then(() => {
+      /** Copy external files to prefix folder */
+      if (Object.keys(functionOptions.external).length) {
+        return BbPromise.map(Object.keys(functionOptions.external), (external) => {
+          /** Remove relative dot */
+          if (external.substring(0, 2) === './') {
+            external = external.substring(2)
+          }
+
+          /** Copy file */
+          return fs.copyAsync(this.getPath(functionOptions.external[external]), this.getPath(functionModulesOptimizeDir + '/' + external))
         })
       }
     }).then(() => {
