@@ -11,6 +11,7 @@
  * @requires 'fs-extra'
  * @requires 'path'
  * @requires 'uglifyify'
+ * @requires 'resolve-from'
  * */
 const babelify = require('babelify')
 const browserify = require('browserify')
@@ -18,6 +19,7 @@ const BbPromise = require('bluebird')
 const fs = BbPromise.promisifyAll(require('fs-extra'))
 const path = require('path')
 const uglify = require('uglifyify')
+const resolveFrom = require('resolve-from');
 
 /**
  * @classdesc Bundle, transpile to ES5 and minify your Serverless functions
@@ -43,6 +45,8 @@ class Optimize {
       options: {
         debug: false,
         exclude: ['aws-sdk'],
+        external: [],
+        externalPaths: {},
         extensions: [],
         global: false,
         includePaths: [],
@@ -64,6 +68,16 @@ class Optimize {
       /** Exclude */
       if (Array.isArray(this.custom.optimize.exclude)) {
         this.optimize.options.exclude = this.custom.optimize.exclude
+      }
+
+      /** External */
+      if (Array.isArray(this.custom.optimize.external)) {
+        this.optimize.options.external = this.custom.optimize.external
+      }
+
+      /** External Paths */
+      if (typeof this.custom.optimize.externalPaths === 'object') {
+        this.optimize.options.externalPaths = this.custom.optimize.externalPaths
       }
 
       /** Extensions */
@@ -237,6 +251,8 @@ class Optimize {
     const functionOptimizePath = this.optimize.options.prefix + '/' + functionObject.name
     const functionOptimizeHandler = functionOptimizePath + '/' + functionPath
     const functionBundle = this.getPath(functionOptimizeHandler + '.js')
+    const functionDir = functionPath.substring(0, functionPath.lastIndexOf('/'))
+    const functionModulesOptimizeDir = functionOptimizePath + '/' + functionDir + '/' + 'node_modules'
 
     /** Skip function */
     if (functionObject.optimize === false) {
@@ -260,6 +276,8 @@ class Optimize {
     /** Function optimize options */
     let functionOptions = {
       exclude: this.optimize.options.exclude,
+      external: this.optimize.options.external,
+      externalPaths: Object.assign({}, this.optimize.options.externalPaths),
       extensions: this.optimize.options.extensions,
       global: this.optimize.options.global,
       includePaths: this.optimize.options.includePaths,
@@ -273,6 +291,16 @@ class Optimize {
       /** Exclude */
       if (Array.isArray(functionObject.optimize.exclude)) {
         functionOptions.exclude = optimize.exclude = functionObject.optimize.exclude
+      }
+
+      /** External */
+      if (Array.isArray(functionObject.optimize.external)) {
+        functionOptions.external = optimize.external = functionObject.optimize.external
+      }
+
+      /** External paths */
+      if (typeof functionObject.optimize.externalPaths === 'object') {
+        functionOptions.externalPaths = optimize.externalPaths = functionObject.optimize.externalPaths
       }
 
       /** Extensions */
@@ -334,6 +362,11 @@ class Optimize {
       bundler.exclude(exclusion)
     })
 
+    /** Browserify external */
+    functionOptions.external.forEach((external) => {
+      bundler.external(external)
+    })
+
     /** Browserify babelify transform */
     bundler.transform(babelify, {
       global: functionOptions.global,
@@ -372,6 +405,27 @@ class Optimize {
 
           /** Copy file */
           return fs.copyAsync(this.getPath(includePath), this.getPath(functionOptimizePath + '/' + includePath))
+        })
+      }
+    }).then(() => {
+      /** Copy external files to prefix folder */
+      if (functionOptions.external.length) {
+        return BbPromise.map(functionOptions.external, (external) => {
+          /** Remove relative dot */
+          if (external.substring(0, 2) === './') {
+            external = external.substring(2)
+          }
+
+          /** Copy file */
+          const externalEntry = resolveFrom(functionFile, external) || functionDir + '/'
+          const externalDir = externalEntry.substring(
+            this.serverless.config.servicePath.length,
+            externalEntry.lastIndexOf('node_modules/' + external)
+          ) + 'node_modules/' + external
+          return fs.copyAsync(
+            this.getPath(functionOptions.externalPaths[external] || externalDir),
+            this.getPath(functionModulesOptimizeDir + '/' + external)
+          )
         })
       }
     }).then(() => {
