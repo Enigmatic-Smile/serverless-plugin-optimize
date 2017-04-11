@@ -32,7 +32,7 @@ package:
   individually: true
 ```
 
-* All done!
+* All done! Optimize will run on SLS `deploy` and `invoke local` commands
 
 ## Options
 
