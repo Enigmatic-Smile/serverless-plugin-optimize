@@ -49,7 +49,7 @@ Configuration options can be set globally in `custom` property and inside each f
 * **external** Array of modules to be copied into `node_modules` instead of being loaded into browserify bundle. Note that external modules will require it's dependencies within it's directory. (`cd external_modules/some-module && npm i --prod`)
 * **externalPath** Optional object key value pair of external module name and path. If not set, external modules will look for reference path in `node_modules`.
 * **global** (default `false`) - When global is set to `true` transforms will run inside `node_modules`.
-* **ignore** - Array of modules or paths that won't be transformed with Babelify and Uglify.
+* **ignore** - Array of modules or paths that won't be transformed with Babelify.
 * **includePaths** - Array of file paths that will be included in the bundle package. Read [here](#includepaths-files) how to call these files.
 * **minify** (default `true`) - When minify is set to `false` Babili preset won't be added.
 * **plugins** - Array of Babel plugins.
@@ -89,9 +89,9 @@ functions:
 * **external** Array of modules to be copied into `node_modules` instead of being loaded into browserify bundle. Note that external modules will require it's dependencies within it's directory. (`cd external_modules/some-module && npm i --prod`)
 * **externalPath** Optional object key value pair of external module name and path. If not set, external modules will look for reference path in `node_modules`.
 * **global** - When global is set to `true` transforms will run inside `node_modules`.
-* **ignore** - Array of modules or paths that won't be transformed with Babelify and Uglify.
+* **ignore** - Array of modules or paths that won't be transformed with Babelify.
 * **includePaths** - Array of file paths that will be included in the bundle package. Read [here](#includepaths-files) how to call these files.
-* **minify** - When minify is set to `false` Uglify transform won't run.
+* **minify** - When minify is set to `false` Babili preset won't be added.
 * **plugins** - Array of Babel plugins.
 * **presets** - Array of Babel presets.
 
