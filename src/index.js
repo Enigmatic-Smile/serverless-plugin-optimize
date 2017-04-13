@@ -381,7 +381,7 @@ class Optimize {
 
     /** Browserify Babili minification preset */
     if (functionOptions.minify) {
-      functionOptions.presets.unshift(require.resolve('babel-preset-babili'))
+      functionOptions.presets = [require.resolve('babel-preset-babili')].concat(functionOptions.presets)
     }
 
     /** Browserify babelify transform */
