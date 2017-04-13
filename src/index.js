@@ -10,7 +10,6 @@
  * @requires 'bluebird'
  * @requires 'fs-extra'
  * @requires 'path'
- * @requires 'uglifyify'
  * @requires 'resolve-from'
  * */
 const babelify = require('babelify')
@@ -18,8 +17,7 @@ const browserify = require('browserify')
 const BbPromise = require('bluebird')
 const fs = BbPromise.promisifyAll(require('fs-extra'))
 const path = require('path')
-const uglify = require('uglifyify')
-const resolveFrom = require('resolve-from');
+const resolveFrom = require('resolve-from')
 
 /**
  * @classdesc Bundle, transpile to ES5 and minify your Serverless functions
@@ -39,96 +37,108 @@ class Optimize {
     this.options = options
     this.custom = this.serverless.service.custom
 
-    /** Optimize variables with default options */
-    this.optimize = {
-      functions: [],
-      options: {
-        debug: false,
-        exclude: ['aws-sdk'],
-        external: [],
-        externalPaths: {},
-        extensions: [],
-        global: false,
-        includePaths: [],
-        ignore: [],
-        minify: true,
-        plugins: [],
-        prefix: '_optimize',
-        presets: ['es2015']
-      }
-    }
+    /** Runtime >=node4.3 */
+    const validRunTime = (!this.serverless.service.provider.runtime ||
+    this.serverless.service.provider.runtime === 'nodejs4.3' ||
+    this.serverless.service.provider.runtime === 'nodejs6.10')
 
-    /** Set custom options */
-    if (this.custom && this.custom.optimize) {
-      /** Debug flag */
-      if (this.custom.optimize.debug === true) {
-        this.optimize.options.debug = this.custom.optimize.debug
-      }
-
-      /** Exclude */
-      if (Array.isArray(this.custom.optimize.exclude)) {
-        this.optimize.options.exclude = this.custom.optimize.exclude
-      }
-
-      /** External */
-      if (Array.isArray(this.custom.optimize.external)) {
-        this.optimize.options.external = this.custom.optimize.external
+    /** AWS provider and valid runtime check */
+    if (this.serverless.service.provider.name === 'aws' && validRunTime) {
+      /** Optimize variables with default options */
+      this.optimize = {
+        functions: [],
+        options: {
+          debug: false,
+          exclude: ['aws-sdk'],
+          external: [],
+          externalPaths: {},
+          extensions: [],
+          global: false,
+          includePaths: [],
+          ignore: [],
+          minify: true,
+          plugins: [],
+          prefix: '_optimize',
+          presets: [[require.resolve('babel-preset-env'), {
+            targets: {
+              node: this.serverless.service.provider.runtime === 'nodejs6.10' ? 6.5 : 4
+            }
+          }]]
+        }
       }
 
-      /** External Paths */
-      if (typeof this.custom.optimize.externalPaths === 'object') {
-        this.optimize.options.externalPaths = this.custom.optimize.externalPaths
+      /** Set custom options */
+      if (this.custom && this.custom.optimize) {
+        /** Debug flag */
+        if (this.custom.optimize.debug === true) {
+          this.optimize.options.debug = this.custom.optimize.debug
+        }
+
+        /** Exclude */
+        if (Array.isArray(this.custom.optimize.exclude)) {
+          this.optimize.options.exclude = this.custom.optimize.exclude
+        }
+
+        /** External */
+        if (Array.isArray(this.custom.optimize.external)) {
+          this.optimize.options.external = this.custom.optimize.external
+        }
+
+        /** External Paths */
+        if (typeof this.custom.optimize.externalPaths === 'object') {
+          this.optimize.options.externalPaths = this.custom.optimize.externalPaths
+        }
+
+        /** Extensions */
+        if (Array.isArray(this.custom.optimize.extensions)) {
+          this.optimize.options.extensions = this.custom.optimize.extensions
+        }
+
+        /** Global transforms */
+        if (typeof this.custom.optimize.global === 'boolean') {
+          this.optimize.options.global = this.custom.optimize.global
+        }
+
+        /** Include paths */
+        if (Array.isArray(this.custom.optimize.includePaths)) {
+          this.optimize.options.includePaths = this.custom.optimize.includePaths
+        }
+
+        /** Ignore */
+        if (Array.isArray(this.custom.optimize.ignore)) {
+          this.optimize.options.ignore = this.custom.optimize.ignore
+        }
+
+        /** Minify flag */
+        if (typeof this.custom.optimize.minify === 'boolean') {
+          this.optimize.options.minify = this.custom.optimize.minify
+        }
+
+        /** Babel plugins */
+        if (Array.isArray(this.custom.optimize.plugins)) {
+          this.optimize.options.plugins = this.custom.optimize.plugins
+        }
+
+        /** Optimize prefix */
+        if (typeof this.custom.optimize.prefix === 'string') {
+          this.optimize.options.prefix = this.custom.optimize.prefix
+        }
+
+        /** Babel presets */
+        if (Array.isArray(this.custom.optimize.presets)) {
+          this.optimize.options.presets = this.custom.optimize.presets
+        }
       }
 
-      /** Extensions */
-      if (Array.isArray(this.custom.optimize.extensions)) {
-        this.optimize.options.extensions = this.custom.optimize.extensions
+      /** Serverless hooks */
+      this.hooks = {
+        'after:deploy:function:packageFunction': this.afterCreateDeploymentArtifacts.bind(this),
+        'before:deploy:function:packageFunction': this.beforeCreateDeploymentArtifacts.bind(this),
+        'after:deploy:createDeploymentArtifacts': this.afterCreateDeploymentArtifacts.bind(this),
+        'before:deploy:createDeploymentArtifacts': this.beforeCreateDeploymentArtifacts.bind(this),
+        'after:invoke:local:invoke': this.afterCreateDeploymentArtifacts.bind(this),
+        'before:invoke:local:invoke': this.beforeCreateDeploymentArtifacts.bind(this)
       }
-
-      /** Global transforms */
-      if (typeof this.custom.optimize.global === 'boolean') {
-        this.optimize.options.global = this.custom.optimize.global
-      }
-
-      /** Include paths */
-      if (Array.isArray(this.custom.optimize.includePaths)) {
-        this.optimize.options.includePaths = this.custom.optimize.includePaths
-      }
-
-      /** Ignore */
-      if (Array.isArray(this.custom.optimize.ignore)) {
-        this.optimize.options.ignore = this.custom.optimize.ignore
-      }
-
-      /** Minify flag */
-      if (typeof this.custom.optimize.minify === 'boolean') {
-        this.optimize.options.minify = this.custom.optimize.minify
-      }
-
-      /** Babel plugins */
-      if (Array.isArray(this.custom.optimize.plugins)) {
-        this.optimize.options.plugins = this.custom.optimize.plugins
-      }
-
-      /** Optimize prefix */
-      if (typeof this.custom.optimize.prefix === 'string') {
-        this.optimize.options.prefix = this.custom.optimize.prefix
-      }
-
-      /** Babel presets */
-      if (Array.isArray(this.custom.optimize.presets)) {
-        this.optimize.options.presets = this.custom.optimize.presets
-      }
-    }
-
-    /** Serverless hooks */
-    this.hooks = {
-      'after:deploy:function:packageFunction': this.afterCreateDeploymentArtifacts.bind(this),
-      'before:deploy:function:packageFunction': this.beforeCreateDeploymentArtifacts.bind(this),
-      'after:deploy:createDeploymentArtifacts': this.afterCreateDeploymentArtifacts.bind(this),
-      'before:deploy:createDeploymentArtifacts': this.beforeCreateDeploymentArtifacts.bind(this),
-      'after:invoke:local:invoke': this.afterCreateDeploymentArtifacts.bind(this),
-      'before:invoke:local:invoke': this.beforeCreateDeploymentArtifacts.bind(this)
     }
   }
 
@@ -369,6 +379,11 @@ class Optimize {
       bundler.external(external)
     })
 
+    /** Browserify Babili minification preset */
+    if (functionOptions.minify) {
+      functionOptions.presets.unshift(require.resolve('babel-preset-babili'))
+    }
+
     /** Browserify babelify transform */
     bundler.transform(babelify, {
       global: functionOptions.global,
@@ -376,14 +391,6 @@ class Optimize {
       plugins: functionOptions.plugins,
       presets: functionOptions.presets
     })
-
-    /** Browserify minify transform */
-    if (functionOptions.minify) {
-      bundler.transform(uglify, {
-        global: functionOptions.global,
-        ignore: functionOptions.ignore
-      })
-    }
 
     /** Generate bundle */
     return new Promise((resolve, reject) => {
