@@ -132,10 +132,10 @@ class Optimize {
 
       /** Serverless hooks */
       this.hooks = {
-        'after:deploy:function:packageFunction': this.afterCreateDeploymentArtifacts.bind(this),
-        'before:deploy:function:packageFunction': this.beforeCreateDeploymentArtifacts.bind(this),
-        'after:deploy:createDeploymentArtifacts': this.afterCreateDeploymentArtifacts.bind(this),
-        'before:deploy:createDeploymentArtifacts': this.beforeCreateDeploymentArtifacts.bind(this),
+        'after:package:function:package': this.afterCreateDeploymentArtifacts.bind(this),
+        'before:package:function:package': this.beforeCreateDeploymentArtifacts.bind(this),
+        'after:package:createDeploymentArtifacts': this.afterCreateDeploymentArtifacts.bind(this),
+        'before:package:createDeploymentArtifacts': this.beforeCreateDeploymentArtifacts.bind(this),
         'after:invoke:local:invoke': this.afterCreateDeploymentArtifacts.bind(this),
         'before:invoke:local:invoke': this.beforeCreateDeploymentArtifacts.bind(this)
       }

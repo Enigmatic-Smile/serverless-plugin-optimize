@@ -11,7 +11,7 @@ Bundle with Browserify, transpile with Babel and minify with Babili automaticall
 This plugin is a child of the great [serverless-optimizer-plugin](https://github.com/serverless/serverless-optimizer-plugin). Kudos!
 
 **Requirements:**
-* Serverless *v1.2.x* or higher.
+* Serverless *v1.12.x* or higher.
 * AWS provider and nodejs4.3 or nodejs6.10 runtimes
 
 ## Setup
