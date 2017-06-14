@@ -1,6 +1,6 @@
 {
   "name": "serverless-plugin-optimize",
-  "version": "3.0.0-rc.1",
+  "version": "3.0.1-rc.1",
   "description": "Bundle with Browserify, transpile with Babel and minify with Babili automatically to your NodeJS runtime compatible JavaScript.",
   "main": "src/index.js",
   "scripts": {
