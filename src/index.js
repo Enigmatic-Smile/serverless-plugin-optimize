@@ -61,7 +61,7 @@ class Optimize {
           prefix: '_optimize',
           presets: [[require.resolve('babel-preset-env'), {
             targets: {
-              node: this.serverless.service.provider.runtime === 'nodejs6.10' ? 6.5 : 4
+              node: this.serverless.service.provider.runtime === 'nodejs6.10' ? '6.10' : '4.3'
             }
           }]]
         }
