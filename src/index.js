@@ -164,7 +164,8 @@ class Optimize {
         exclude: ['**'],
         include: [this.optimize.options.prefix + '/**']
       }
-      this.serverless.service.package = this.optimize.package
+      this.serverless.service.package = this.serverless.service.package || {}
+      Object.assign(this.serverless.service.package, this.optimize.package)
     }
 
     /** Clean prefix folder */
