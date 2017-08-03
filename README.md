@@ -60,17 +60,17 @@ custom:
   optimize:
     debug: true
     exclude: ['ajv']
-  	extensions: ['.extension']
+    extensions: ['.extension']
     external: ['sharp']
     externalPath:
       sharp: 'external_modules/sharp'
     global: true
     ignore: ['ajv']
     includePaths: ['bin/some-binary-file']
-  	minify: false
-  	prefix: 'dist'
-  	plugins: ['transform-decorators-legacy']
-  	presets: ['es2017']
+  	 minify: false
+  	 prefix: 'dist'
+  	 plugins: ['transform-decorators-legacy']
+  	 presets: ['es2017']
 ```
 
 #### Function
