@@ -46,7 +46,7 @@ Configuration options can be set globally in `custom` property and inside each f
 * **exclude** (default `['aws-sdk']`) - Array of modules or paths that will be excluded.
 * **extensions** (default `['.js', '.json']`) - Array of optional extra extensions modules that will be included.
 * **external** Array of modules to be copied into `node_modules` instead of being loaded into browserify bundle. Note that external modules will require that its dependencies are within its directory and this plugin *will not* do this for you. e.g. you should execute the following: (`cd external_modules/some-module && npm i --prod`)
-* **externalPath** Optional object key value pair of external module name and path. If not set, external modules will look for reference path in `node_modules`.
+* **externalPaths** Optional object key value pair of external module name and path. If not set, external modules will look for reference path in `node_modules`.
 * **global** (default `false`) - When global is set to `true` transforms will run inside `node_modules`.
 * **ignore** - Array of modules or paths that won't be transformed with Babelify.
 * **includePaths** - Array of file paths that will be included in the bundle package. Read [here](#includepaths-files) how to call these files.
@@ -62,7 +62,7 @@ custom:
     exclude: ['ajv']
     extensions: ['.extension']
     external: ['sharp']
-    externalPath:
+    externalPaths:
       sharp: 'external_modules/sharp'
     global: true
     ignore: ['ajv']
@@ -86,7 +86,7 @@ functions:
 * **exclude** - Array of modules or paths that will be excluded.
 * **extensions** - Array of optional extra extensions modules that will be included.
 * **external** Array of modules to be copied into `node_modules` instead of being loaded into browserify bundle. Note that external modules will require it's dependencies within it's directory. (`cd external_modules/some-module && npm i --prod`)
-* **externalPath** Optional object key value pair of external module name and path. If not set, external modules will look for reference path in `node_modules`.
+* **externalPaths** Optional object key value pair of external module name and path. If not set, external modules will look for reference path in `node_modules`.
 * **global** - When global is set to `true` transforms will run inside `node_modules`.
 * **ignore** - Array of modules or paths that won't be transformed with Babelify.
 * **includePaths** - Array of file paths that will be included in the bundle package. Read [here](#includepaths-files) how to call these files.
@@ -101,7 +101,7 @@ functions:
       exclude: ['ajv']
       extensions: ['.extension']
       external: ['sharp']
-      externalPath:
+      externalPaths:
         sharp: 'external_modules/sharp'
       global: false
       ignore: ['ajv']
