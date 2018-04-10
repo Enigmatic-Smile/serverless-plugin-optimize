@@ -37,13 +37,16 @@ class Optimize {
     this.options = options
     this.custom = this.serverless.service.custom
 
+    this.provider = this.serverless.getProvider('aws')
+
     /** Runtime >=node4.3 */
     const validRunTime = (!this.serverless.service.provider.runtime ||
     this.serverless.service.provider.runtime === 'nodejs4.3' ||
-    this.serverless.service.provider.runtime === 'nodejs6.10')
+    this.serverless.service.provider.runtime === 'nodejs6.10' ||
+    this.serverless.service.provider.runtime === 'nodejs8.10')
 
     /** AWS provider and valid runtime check */
-    if (this.serverless.service.provider.name === 'aws' && validRunTime) {
+    if (validRunTime) {
       /** Optimize variables with default options */
       this.optimize = {
         functions: [],
@@ -61,7 +64,7 @@ class Optimize {
           prefix: '_optimize',
           presets: [[require.resolve('babel-preset-env'), {
             targets: {
-              node: this.serverless.service.provider.runtime === 'nodejs6.10' ? '6.10' : '4.3'
+              node: this.serverless.service.provider.runtime.split('nodejs')[1]
             }
           }]]
         }
@@ -392,7 +395,9 @@ class Optimize {
 
     /** Browserify Babili minification preset */
     if (functionOptions.minify) {
-      functionOptions.presets = [require.resolve('babel-preset-babili')].concat(functionOptions.presets)
+      functionOptions.presets = [[require.resolve('babel-preset-minify'), {
+        mangle: false
+      }]].concat(functionOptions.presets)
     }
 
     /** Browserify babelify transform */
