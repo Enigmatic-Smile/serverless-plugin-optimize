@@ -5,7 +5,7 @@ Serverless Optimize Plugin
 [![npm downloads](https://img.shields.io/npm/dm/serverless-plugin-optimize.svg)](https://www.npmjs.com/package/serverless-plugin-optimize)
 [![license](https://img.shields.io/npm/l/serverless-plugin-optimize.svg)](https://raw.githubusercontent.com/FidelLimited/serverless-plugin-optimize/master/LICENSE)
 
-Bundle with Browserify, transpile with Babel and minify with Babili automatically to your NodeJS runtime compatible JavaScript.
+Bundle with Browserify, transpile and minify with Babel automatically to your NodeJS runtime compatible JavaScript.
 
 This plugin is a child of the great [serverless-optimizer-plugin](https://github.com/serverless/serverless-optimizer-plugin). Kudos!
 
