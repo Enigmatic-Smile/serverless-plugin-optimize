@@ -23,7 +23,7 @@
   "bugs": {
     "url": "https://github.com/FidelLimited/serverless-plugin-optimize/issues"
   },
-  "homepage": "https://github.com/FidelLimited/serverless-plugin-optimize#readme",
+  "homepage": "https://github.com/FidelLimited/serverless-plugin-optimize",
   "dependencies": {
     "babel-preset-babili": "^0.0.12",
     "babel-preset-env": "^1.5.2",
