@@ -62,7 +62,7 @@ class Optimize {
           minify: true,
           plugins: [],
           prefix: '_optimize',
-          presets: [[require.resolve('babel-preset-env'), {
+          presets: [[require.resolve('@babel/preset-env'), {
             targets: {
               node: this.serverless.service.provider.runtime.split('nodejs')[1]
             }
@@ -161,7 +161,7 @@ class Optimize {
     this.path = this.getPath(this.optimize.options.prefix)
 
     /** Package globally or individually */
-    this.optimize.options.individually = this.serverless.service.package && this.serverless.service.package.individually ? true : false
+    this.optimize.options.individually = !!(this.serverless.service.package && this.serverless.service.package.individually)
     if (!this.optimize.options.individually) {
       this.optimize.package = {
         exclude: ['**'],
