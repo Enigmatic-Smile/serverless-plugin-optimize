@@ -40,10 +40,11 @@ class Optimize {
     this.provider = this.serverless.getProvider('aws')
 
     /** Runtime >=node4.3 */
-    const validRunTime = (!this.serverless.service.provider.runtime ||
-    this.serverless.service.provider.runtime === 'nodejs4.3' ||
-    this.serverless.service.provider.runtime === 'nodejs6.10' ||
-    this.serverless.service.provider.runtime === 'nodejs8.10')
+    const validRunTime =
+      !this.serverless.service.provider.runtime ||
+      this.serverless.service.provider.runtime === 'nodejs4.3' ||
+      this.serverless.service.provider.runtime === 'nodejs6.10' ||
+      this.serverless.service.provider.runtime === 'nodejs8.10'
 
     /** AWS provider and valid runtime check */
     if (validRunTime) {
@@ -62,11 +63,18 @@ class Optimize {
           minify: true,
           plugins: [],
           prefix: '_optimize',
-          presets: [[require.resolve('babel-preset-env'), {
-            targets: {
-              node: this.serverless.service.provider.runtime.split('nodejs')[1]
-            }
-          }]]
+          presets: [
+            [
+              require.resolve('@babel/preset-env'),
+              {
+                targets: {
+                  node: this.serverless.service.provider.runtime.split(
+                    'nodejs'
+                  )[1]
+                }
+              }
+            ]
+          ]
         }
       }
 
@@ -135,12 +143,24 @@ class Optimize {
 
       /** Serverless hooks */
       this.hooks = {
-        'after:package:function:package': this.afterCreateDeploymentArtifacts.bind(this),
-        'before:package:function:package': this.beforeCreateDeploymentArtifacts.bind(this),
-        'after:package:createDeploymentArtifacts': this.afterCreateDeploymentArtifacts.bind(this),
-        'before:package:createDeploymentArtifacts': this.beforeCreateDeploymentArtifacts.bind(this),
-        'after:invoke:local:invoke': this.afterCreateDeploymentArtifacts.bind(this),
-        'before:invoke:local:invoke': this.beforeCreateDeploymentArtifacts.bind(this)
+        'after:package:function:package': this.afterCreateDeploymentArtifacts.bind(
+          this
+        ),
+        'before:package:function:package': this.beforeCreateDeploymentArtifacts.bind(
+          this
+        ),
+        'after:package:createDeploymentArtifacts': this.afterCreateDeploymentArtifacts.bind(
+          this
+        ),
+        'before:package:createDeploymentArtifacts': this.beforeCreateDeploymentArtifacts.bind(
+          this
+        ),
+        'after:invoke:local:invoke': this.afterCreateDeploymentArtifacts.bind(
+          this
+        ),
+        'before:invoke:local:invoke': this.beforeCreateDeploymentArtifacts.bind(
+          this
+        )
       }
     }
   }
@@ -161,7 +181,10 @@ class Optimize {
     this.path = this.getPath(this.optimize.options.prefix)
 
     /** Package globally or individually */
-    this.optimize.options.individually = this.serverless.service.package && this.serverless.service.package.individually ? true : false
+    this.optimize.options.individually = !!(
+      this.serverless.service.package &&
+      this.serverless.service.package.individually
+    )
     if (!this.optimize.options.individually) {
       this.optimize.package = {
         exclude: ['**'],
@@ -194,7 +217,9 @@ class Optimize {
   afterCreateDeploymentArtifacts () {
     /** Log optimize object if debug flag is set */
     if (this.optimize.options.debug) {
-      this.serverless.cli.log('Optimize: debug ' + JSON.stringify(this.optimize, null, 2))
+      this.serverless.cli.log(
+        'Optimize: debug ' + JSON.stringify(this.optimize, null, 2)
+      )
     } else {
       /** Clean prefix folder */
       return this.cleanFolder()
@@ -251,7 +276,7 @@ class Optimize {
     /** Create prefix folder */
     return this.createFolder().then(() => {
       /** Optimize each function */
-      return BbPromise.map(allFunctions, (functionName) => {
+      return BbPromise.map(allFunctions, functionName => {
         return this.optimizeFunction(functionName)
       })
     })
@@ -274,11 +299,16 @@ class Optimize {
     const functionFileIndex = functionObject.handler.lastIndexOf('.')
     const functionPath = functionObject.handler.substring(0, functionFileIndex)
     const functionFile = this.getPath(functionPath + '.js')
-    const functionOptimizePath = this.optimize.options.prefix + '/' + functionObject.name
+    const functionOptimizePath =
+      this.optimize.options.prefix + '/' + functionObject.name
     const functionOptimizeHandler = functionOptimizePath + '/' + functionPath
     const functionBundle = this.getPath(functionOptimizeHandler + '.js')
-    const functionDir = functionPath.substring(0, functionPath.lastIndexOf('/'))
-    const functionModulesOptimizeDir = functionOptimizePath + '/' + functionDir + '/' + 'node_modules'
+    const functionDir = functionPath.substring(
+      0,
+      functionPath.lastIndexOf('/')
+    )
+    const functionModulesOptimizeDir =
+      functionOptimizePath + '/' + functionDir + '/' + 'node_modules'
 
     /** Skip function */
     if (functionObject.optimize === false) {
@@ -292,7 +322,9 @@ class Optimize {
     let optimize = {
       bundle: functionBundle,
       handlerOriginal: functionObject.handler,
-      handlerOptimize: functionOptimizeHandler + functionObject.handler.substring(functionFileIndex),
+      handlerOptimize:
+        functionOptimizeHandler +
+        functionObject.handler.substring(functionFileIndex),
       package: {
         exclude: ['**'],
         include: [functionOptimizePath + '/**']
@@ -316,52 +348,62 @@ class Optimize {
     if (functionObject.optimize) {
       /** Exclude */
       if (Array.isArray(functionObject.optimize.exclude)) {
-        functionOptions.exclude = optimize.exclude = functionObject.optimize.exclude
+        functionOptions.exclude = optimize.exclude =
+          functionObject.optimize.exclude
       }
 
       /** External */
       if (Array.isArray(functionObject.optimize.external)) {
-        functionOptions.external = optimize.external = functionObject.optimize.external
+        functionOptions.external = optimize.external =
+          functionObject.optimize.external
       }
 
       /** External paths */
       if (typeof functionObject.optimize.externalPaths === 'object') {
-        functionOptions.externalPaths = optimize.externalPaths = functionObject.optimize.externalPaths
+        functionOptions.externalPaths = optimize.externalPaths =
+          functionObject.optimize.externalPaths
       }
 
       /** Extensions */
       if (Array.isArray(functionObject.optimize.extensions)) {
-        functionOptions.extensions = optimize.extensions = functionObject.optimize.extensions
+        functionOptions.extensions = optimize.extensions =
+          functionObject.optimize.extensions
       }
 
       /** Global transforms */
       if (typeof functionObject.optimize.global === 'boolean') {
-        functionOptions.global = optimize.global = functionObject.optimize.global
+        functionOptions.global = optimize.global =
+          functionObject.optimize.global
       }
 
       /** Include paths */
       if (Array.isArray(functionObject.optimize.includePaths)) {
-        functionOptions.includePaths = optimize.includePaths = functionObject.optimize.includePaths
+        functionOptions.includePaths = optimize.includePaths =
+          functionObject.optimize.includePaths
       }
 
       /** Ignore */
       if (Array.isArray(functionObject.optimize.ignore)) {
-        functionOptions.ignore = optimize.ignore = functionObject.optimize.ignore
+        functionOptions.ignore = optimize.ignore =
+          functionObject.optimize.ignore
       }
 
       /** Minify flag */
       if (typeof functionObject.optimize.minify === 'boolean') {
-        functionOptions.minify = optimize.minify = functionObject.optimize.minify
+        functionOptions.minify = optimize.minify =
+          functionObject.optimize.minify
       }
 
       /** Babel plugins */
       if (Array.isArray(functionObject.optimize.plugins)) {
-        functionOptions.plugins = optimize.plugins = functionObject.optimize.plugins
+        functionOptions.plugins = optimize.plugins =
+          functionObject.optimize.plugins
       }
 
       /** Babel presets */
       if (Array.isArray(functionObject.optimize.presets)) {
-        functionOptions.presets = optimize.presets = functionObject.optimize.presets
+        functionOptions.presets = optimize.presets =
+          functionObject.optimize.presets
       }
     }
 
@@ -375,7 +417,8 @@ class Optimize {
       commondir: false,
       ignoreMissing: true,
       detectGlobals: true,
-      insertGlobalVars: { // https://github.com/substack/node-browserify/issues/1472
+      insertGlobalVars: {
+        // https://github.com/substack/node-browserify/issues/1472
         process: undefined,
         global: undefined,
         'Buffer.isBuffer': undefined,
@@ -384,20 +427,25 @@ class Optimize {
     })
 
     /** Browserify exclude */
-    functionOptions.exclude.forEach((exclusion) => {
+    functionOptions.exclude.forEach(exclusion => {
       bundler.exclude(exclusion)
     })
 
     /** Browserify external */
-    functionOptions.external.forEach((external) => {
+    functionOptions.external.forEach(external => {
       bundler.external(external)
     })
 
     /** Browserify Babili minification preset */
     if (functionOptions.minify) {
-      functionOptions.presets = [[require.resolve('babel-preset-minify'), {
-        mangle: false
-      }]].concat(functionOptions.presets)
+      functionOptions.presets = [
+        [
+          require.resolve('babel-preset-minify'),
+          {
+            mangle: false
+          }
+        ]
+      ].concat(functionOptions.presets)
     }
 
     /** Browserify babelify transform */
@@ -419,50 +467,62 @@ class Optimize {
         /** Write bundle */
         resolve(fs.outputFileAsync(functionBundle, buff.toString()))
       })
-    }).then(() => {
-      /** Copy includePaths files to prefix folder */
-      if (functionOptions.includePaths.length) {
-        return BbPromise.map(functionOptions.includePaths, (includePath) => {
-          /** Remove relative dot */
-          if (includePath.substring(0, 2) === './') {
-            includePath = includePath.substring(2)
-          }
-
-          /** Copy file */
-          return fs.copyAsync(this.getPath(includePath), this.getPath(functionOptimizePath + '/' + includePath))
-        })
-      }
-    }).then(() => {
-      /** Copy external files to prefix folder */
-      if (functionOptions.external.length) {
-        return BbPromise.map(functionOptions.external, (external) => {
-          /** Remove relative dot */
-          if (external.substring(0, 2) === './') {
-            external = external.substring(2)
-          }
-
-          /** Copy file */
-          const externalEntry = resolveFrom(functionFile, external) || functionDir + '/'
-          const externalDir = externalEntry.substring(
-            this.serverless.config.servicePath.length,
-            externalEntry.lastIndexOf('node_modules/' + external)
-          ) + 'node_modules/' + external
-          return fs.copyAsync(
-            this.getPath(functionOptions.externalPaths[external] || externalDir),
-            this.getPath(functionModulesOptimizeDir + '/' + external)
-          )
-        })
-      }
-    }).then(() => {
-      /** Add optimized function to functions array */
-      this.optimize.functions.push(optimize)
-
-      /** Update function object with optimize bundle */
-      functionObject.handler = optimize.handlerOptimize
-
-      /** Update package */
-      functionObject.package = optimize.package
     })
+      .then(() => {
+        /** Copy includePaths files to prefix folder */
+        if (functionOptions.includePaths.length) {
+          return BbPromise.map(functionOptions.includePaths, includePath => {
+            /** Remove relative dot */
+            if (includePath.substring(0, 2) === './') {
+              includePath = includePath.substring(2)
+            }
+
+            /** Copy file */
+            return fs.copyAsync(
+              this.getPath(includePath),
+              this.getPath(functionOptimizePath + '/' + includePath)
+            )
+          })
+        }
+      })
+      .then(() => {
+        /** Copy external files to prefix folder */
+        if (functionOptions.external.length) {
+          return BbPromise.map(functionOptions.external, external => {
+            /** Remove relative dot */
+            if (external.substring(0, 2) === './') {
+              external = external.substring(2)
+            }
+
+            /** Copy file */
+            const externalEntry =
+              resolveFrom(functionFile, external) || functionDir + '/'
+            const externalDir =
+              externalEntry.substring(
+                this.serverless.config.servicePath.length,
+                externalEntry.lastIndexOf('node_modules/' + external)
+              ) +
+              'node_modules/' +
+              external
+            return fs.copyAsync(
+              this.getPath(
+                functionOptions.externalPaths[external] || externalDir
+              ),
+              this.getPath(functionModulesOptimizeDir + '/' + external)
+            )
+          })
+        }
+      })
+      .then(() => {
+        /** Add optimized function to functions array */
+        this.optimize.functions.push(optimize)
+
+        /** Update function object with optimize bundle */
+        functionObject.handler = optimize.handlerOptimize
+
+        /** Update package */
+        functionObject.package = optimize.package
+      })
   }
 }
 
