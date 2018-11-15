@@ -41,9 +41,9 @@ class Optimize {
 
     /** Runtime >=node4.3 */
     const validRunTime = (!this.serverless.service.provider.runtime ||
-    this.serverless.service.provider.runtime === 'nodejs4.3' ||
-    this.serverless.service.provider.runtime === 'nodejs6.10' ||
-    this.serverless.service.provider.runtime === 'nodejs8.10')
+      this.serverless.service.provider.runtime === 'nodejs4.3' ||
+      this.serverless.service.provider.runtime === 'nodejs6.10' ||
+      this.serverless.service.provider.runtime === 'nodejs8.10')
 
     /** AWS provider and valid runtime check */
     if (validRunTime) {
@@ -396,12 +396,14 @@ class Optimize {
     /** Browserify Babili minification preset */
     if (functionOptions.minify) {
       functionOptions.presets = [[require.resolve('babel-preset-minify'), {
-        mangle: false
+        builtIns: false,
+        mangle: true
       }]].concat(functionOptions.presets)
     }
 
     /** Browserify babelify transform */
     bundler.transform(babelify, {
+      comments: false,
       global: functionOptions.global,
       ignore: functionOptions.ignore,
       plugins: functionOptions.plugins,
