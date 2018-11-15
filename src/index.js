@@ -397,7 +397,7 @@ class Optimize {
     if (functionOptions.minify) {
       functionOptions.presets = [[require.resolve('babel-preset-minify'), {
         builtIns: false,
-        mangle: true
+        mangle: false
       }]].concat(functionOptions.presets)
     }
 
