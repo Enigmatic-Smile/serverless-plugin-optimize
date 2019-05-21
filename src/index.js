@@ -54,6 +54,10 @@ class Optimize {
         nodeVersion = this.serverless.service.provider.runtime.split('nodejs')[1];
       }
       
+      if(nodeVersion.endsWith(".x")) {
+        nodeVersion = nodeVersion.replace(/\.x$/, '');
+      }
+      
       /** Optimize variables with default options */
       this.optimize = {
         functions: [],
