@@ -43,10 +43,21 @@ class Optimize {
     const validRunTime = (!this.serverless.service.provider.runtime ||
       this.serverless.service.provider.runtime === 'nodejs4.3' ||
       this.serverless.service.provider.runtime === 'nodejs6.10' ||
-      this.serverless.service.provider.runtime === 'nodejs8.10')
+      this.serverless.service.provider.runtime === 'nodejs8.10' ||
+      this.serverless.service.provider.runtime === 'nodejs10.x')
 
     /** AWS provider and valid runtime check */
     if (validRunTime) {
+      let nodeVersion = "current";
+      
+      if(this.serverless.service.provider.runtime) {
+        nodeVersion = this.serverless.service.provider.runtime.split('nodejs')[1];
+      }
+      
+      if(nodeVersion.endsWith(".x")) {
+        nodeVersion = nodeVersion.replace(/\.x$/, '');
+      }
+      
       /** Optimize variables with default options */
       this.optimize = {
         functions: [],
@@ -64,7 +75,7 @@ class Optimize {
           prefix: '_optimize',
           presets: [[require.resolve('@babel/preset-env'), {
             targets: {
-              node: this.serverless.service.provider.runtime.split('nodejs')[1]
+              node: nodeVersion
             }
           }]]
         }
