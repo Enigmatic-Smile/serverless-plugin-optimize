@@ -82,69 +82,6 @@ class Optimize {
         }
       }
 
-      /** Set custom options */
-      if (this.custom && this.custom.optimize) {
-        /** Debug flag */
-        if (this.custom.optimize.debug === true) {
-          this.optimize.options.debug = this.custom.optimize.debug
-        }
-
-        /** Exclude */
-        if (Array.isArray(this.custom.optimize.exclude)) {
-          this.optimize.options.exclude = this.custom.optimize.exclude
-        }
-
-        /** External */
-        if (Array.isArray(this.custom.optimize.external)) {
-          this.optimize.options.external = this.custom.optimize.external
-        }
-
-        /** External Paths */
-        if (typeof this.custom.optimize.externalPaths === 'object') {
-          this.optimize.options.externalPaths = this.custom.optimize.externalPaths
-        }
-
-        /** Extensions */
-        if (Array.isArray(this.custom.optimize.extensions)) {
-          this.optimize.options.extensions = this.custom.optimize.extensions
-        }
-
-        /** Global transforms */
-        if (typeof this.custom.optimize.global === 'boolean') {
-          this.optimize.options.global = this.custom.optimize.global
-        }
-
-        /** Include paths */
-        if (Array.isArray(this.custom.optimize.includePaths)) {
-          this.optimize.options.includePaths = this.custom.optimize.includePaths
-        }
-
-        /** Ignore */
-        if (Array.isArray(this.custom.optimize.ignore)) {
-          this.optimize.options.ignore = this.custom.optimize.ignore
-        }
-
-        /** Minify flag */
-        if (typeof this.custom.optimize.minify === 'boolean') {
-          this.optimize.options.minify = this.custom.optimize.minify
-        }
-
-        /** Babel plugins */
-        if (Array.isArray(this.custom.optimize.plugins)) {
-          this.optimize.options.plugins = this.custom.optimize.plugins
-        }
-
-        /** Optimize prefix */
-        if (typeof this.custom.optimize.prefix === 'string') {
-          this.optimize.options.prefix = this.custom.optimize.prefix
-        }
-
-        /** Babel presets */
-        if (Array.isArray(this.custom.optimize.presets)) {
-          this.optimize.options.presets = this.custom.optimize.presets
-        }
-      }
-
       /** Serverless hooks */
       this.hooks = {
         'after:package:function:package': this.afterCreateDeploymentArtifacts.bind(this),
@@ -168,6 +105,69 @@ class Optimize {
   beforeCreateDeploymentArtifacts () {
     /** Log optimize start */
     this.serverless.cli.log('Optimize: starting engines')
+
+    /** Set custom options */
+    if (this.custom && this.custom.optimize) {
+      /** Debug flag */
+      if (this.custom.optimize.debug === true) {
+        this.optimize.options.debug = this.custom.optimize.debug
+      }
+
+      /** Exclude */
+      if (Array.isArray(this.custom.optimize.exclude)) {
+        this.optimize.options.exclude = this.custom.optimize.exclude
+      }
+
+      /** External */
+      if (Array.isArray(this.custom.optimize.external)) {
+        this.optimize.options.external = this.custom.optimize.external
+      }
+
+      /** External Paths */
+      if (typeof this.custom.optimize.externalPaths === 'object') {
+        this.optimize.options.externalPaths = this.custom.optimize.externalPaths
+      }
+
+      /** Extensions */
+      if (Array.isArray(this.custom.optimize.extensions)) {
+        this.optimize.options.extensions = this.custom.optimize.extensions
+      }
+
+      /** Global transforms */
+      if (typeof this.custom.optimize.global === 'boolean') {
+        this.optimize.options.global = this.custom.optimize.global
+      }
+
+      /** Include paths */
+      if (Array.isArray(this.custom.optimize.includePaths)) {
+        this.optimize.options.includePaths = this.custom.optimize.includePaths
+      }
+
+      /** Ignore */
+      if (Array.isArray(this.custom.optimize.ignore)) {
+        this.optimize.options.ignore = this.custom.optimize.ignore
+      }
+
+      /** Minify flag */
+      if (typeof this.custom.optimize.minify === 'boolean') {
+        this.optimize.options.minify = this.custom.optimize.minify
+      }
+
+      /** Babel plugins */
+      if (Array.isArray(this.custom.optimize.plugins)) {
+        this.optimize.options.plugins = this.custom.optimize.plugins
+      }
+
+      /** Optimize prefix */
+      if (typeof this.custom.optimize.prefix === 'string') {
+        this.optimize.options.prefix = this.custom.optimize.prefix
+      }
+
+      /** Babel presets */
+      if (Array.isArray(this.custom.optimize.presets)) {
+        this.optimize.options.presets = this.custom.optimize.presets
+      }
+    }
 
     /** Get prefix path */
     this.path = this.getPath(this.optimize.options.prefix)
