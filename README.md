@@ -54,6 +54,7 @@ Configuration options can be set globally in `custom` property and inside each f
 * **plugins** - Array of Babel plugins.
 * **prefix** (default `_optimize`) - Folder to output bundle.
 * **presets** (default `['env']`) - Array of Babel presets.
+* **sourceMaps** (default `false`) - when set to `true` an inline sourcemap is generated. This improves stack trace error messages for minified source files. To enable Lambda to use the generated sourcemap you need to enable the feature using the environment variable `NODE_OPTIONS: --enable-source-maps`.
 
 ```yml
 custom:
@@ -71,6 +72,7 @@ custom:
     prefix: 'dist'
     plugins: ['transform-decorators-legacy']
     presets: ['es2017']
+    sourceMaps: true
 ```
 
 #### Function
@@ -93,6 +95,7 @@ functions:
 * **minify** - When minify is set to `false` Babili preset won't be added.
 * **plugins** - Array of Babel plugins.
 * **presets** - Array of Babel presets.
+* **sourceMaps** (default `false`) - when set to `true` an inline sourcemap is generated. This improves stack trace error messages for minified source files. To enable Lambda to use the generated sourcemap you need to enable the feature using the environment variable `NODE_OPTIONS: --enable-source-maps`.
 
 ```yml
 functions:
@@ -109,6 +112,7 @@ functions:
       minify: false
       plugins: ['transform-decorators-legacy']
       presets: ['es2017']
+      sourceMaps: true
 ```
 
 #### includePaths Files
