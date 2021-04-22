@@ -440,28 +440,20 @@ class Optimize {
     }).then(() => {
       /** Copy includePaths files to prefix folder */
       if (functionOptions.includePaths.length) {
-        if (functionOptions.includePathsAsSubFolders) {
-          return BbPromise.map(functionOptions.includePaths, (includePath) => {
-            /** Remove relative dot */
-            if (includePath.substring(0, 2) === './') {
-              includePath = includePath.substring(2)
-            }
+        return BbPromise.map(functionOptions.includePaths, (includePath) => {
+          /** Remove relative dot */
+          if (includePath.substring(0, 2) === './') {
+            includePath = includePath.substring(2)
+          }
 
-            /** Copy file */
-            return fs.copyAsync(this.getPath(includePath), this.getPath(path.dirname(functionBundle) + '/' + includePath))
-          })
-        }
-        else {
-          return BbPromise.map(functionOptions.includePaths, (includePath) => {
-            /** Remove relative dot */
-            if (includePath.substring(0, 2) === './') {
-              includePath = includePath.substring(2)
-            }
+          let includeDestinationPath = this.getPath(functionOptimizePath + '/' + includePath);
+          if (functionOptions.includePathsAsSubFolders) {
+            includeDestinationPath = this.getPath(path.dirname(functionBundle) + '/' + includePath)
+          }
 
-            /** Copy file */
-            return fs.copyAsync(this.getPath(includePath), this.getPath(functionOptimizePath + '/' + includePath))
-          })
-        }
+          /** Copy file */
+          return fs.copyAsync(this.getPath(includePath), includeDestinationPath)
+        })
       }
     }).then(() => {
       /** Copy external files to prefix folder */
