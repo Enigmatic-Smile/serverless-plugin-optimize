@@ -121,6 +121,11 @@ class Optimize {
           this.optimize.options.includePaths = this.custom.optimize.includePaths
         }
 
+        /** Global transforms */
+        if (typeof this.custom.optimize.includePathsAsSubFolders === 'boolean') {
+          this.optimize.options.includePathsAsSubFolders = this.custom.optimize.includePathsAsSubFolders
+        }
+
         /** Ignore */
         if (Array.isArray(this.custom.optimize.ignore)) {
           this.optimize.options.ignore = this.custom.optimize.ignore
