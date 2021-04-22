@@ -458,7 +458,7 @@ class Optimize {
 
           let includeDestinationPath = this.getPath(functionOptimizePath + '/' + includePath);
           if (functionOptions.includePathsAsSubFolders) {
-            includeDestinationPath = this.getPath(path.dirname(functionBundle) + '/' + includePath)
+            includeDestinationPath = path.dirname(functionBundle) + '/' + includePath;
           }
 
           /** Copy file */
