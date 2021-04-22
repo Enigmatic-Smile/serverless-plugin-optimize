@@ -359,6 +359,11 @@ class Optimize {
         functionOptions.includePaths = optimize.includePaths = functionObject.optimize.includePaths
       }
 
+      /** Include paths as sub folders */
+      if (typeof functionObject.optimize.includePathsAsSubFolders === 'boolean') {
+        functionOptions.includePathsAsSubFolders = optimize.includePathsAsSubFolders = functionObject.optimize.includePathsAsSubFolders
+      }
+
       /** Ignore */
       if (Array.isArray(functionObject.optimize.ignore)) {
         functionOptions.ignore = optimize.ignore = functionObject.optimize.ignore
