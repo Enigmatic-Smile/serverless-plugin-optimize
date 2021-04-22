@@ -321,6 +321,7 @@ class Optimize {
       extensions: this.optimize.options.extensions,
       global: this.optimize.options.global,
       includePaths: this.optimize.options.includePaths,
+      includePathsAsSubFolders: this.optimize.options.includePathsAsSubFolders,
       ignore: this.optimize.options.ignore,
       minify: this.optimize.options.minify,
       plugins: this.optimize.options.plugins,
