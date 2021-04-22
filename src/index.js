@@ -71,6 +71,7 @@ class Optimize {
           extensions: [],
           global: false,
           includePaths: [],
+          includePathsAsSubFolders: false,
           ignore: [],
           minify: true,
           plugins: [],
@@ -438,15 +439,28 @@ class Optimize {
     }).then(() => {
       /** Copy includePaths files to prefix folder */
       if (functionOptions.includePaths.length) {
-        return BbPromise.map(functionOptions.includePaths, (includePath) => {
-          /** Remove relative dot */
-          if (includePath.substring(0, 2) === './') {
-            includePath = includePath.substring(2)
-          }
+        if (functionOptions.includePathsAsSubFolders) {
+          return BbPromise.map(functionOptions.includePaths, (includePath) => {
+            /** Remove relative dot */
+            if (includePath.substring(0, 2) === './') {
+              includePath = includePath.substring(2)
+            }
 
-          /** Copy file */
-          return fs.copyAsync(this.getPath(includePath), this.getPath(functionOptimizePath + '/' + includePath))
-        })
+            /** Copy file */
+            return fs.copyAsync(this.getPath(includePath), this.getPath(path.dirname(functionBundle) + '/' + includePath))
+          })
+        }
+        else {
+          return BbPromise.map(functionOptions.includePaths, (includePath) => {
+            /** Remove relative dot */
+            if (includePath.substring(0, 2) === './') {
+              includePath = includePath.substring(2)
+            }
+
+            /** Copy file */
+            return fs.copyAsync(this.getPath(includePath), this.getPath(functionOptimizePath + '/' + includePath))
+          })
+        }
       }
     }).then(() => {
       /** Copy external files to prefix folder */
