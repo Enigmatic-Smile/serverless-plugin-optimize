@@ -155,6 +155,31 @@ class Optimize {
         'after:invoke:local:invoke': this.afterCreateDeploymentArtifacts.bind(this),
         'before:invoke:local:invoke': this.beforeCreateDeploymentArtifacts.bind(this)
       }
+      
+      /* Extend schema validation for function properties */
+      const arrayOfStringsSchema = { type: 'array', items: { type: 'string' } }
+      serverless.configSchemaHandler.defineFunctionProperties(serverless.service.provider.name, {
+        type: 'object',
+        properties: {
+          optimize: {
+            type: ['boolean', 'object'],
+            properties: {
+              debug: { type: 'boolean' },
+              exclude: arrayOfStringsSchema,
+              external: arrayOfStringsSchema,
+              externalPaths: { type: 'object' },
+              extensions: arrayOfStringsSchema,
+              global: { type: 'boolean' },
+              includePaths: arrayOfStringsSchema,
+              ignore: arrayOfStringsSchema,
+              minify: { type: 'boolean' },
+              plugins: arrayOfStringsSchema,
+              prefix: { type: 'string' },
+              presets: arrayOfStringsSchema
+            }
+          }
+        }
+      })
     }
   }
 
