@@ -283,6 +283,12 @@ class Optimize {
   optimizeFunction (functionName) {
     /** Function object variables */
     const functionObject = this.serverless.service.getFunction(functionName)
+
+    /** Skip function if it is an Image deployment */
+    if (functionObject.image) {
+      return BbPromise.resolve('optimization not possible on Image deployment functions')
+    }
+
     functionObject.package = functionObject.package || {}
     const functionFileIndex = functionObject.handler.lastIndexOf('.')
     const functionPath = functionObject.handler.substring(0, functionFileIndex)
