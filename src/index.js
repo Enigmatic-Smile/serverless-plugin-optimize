@@ -393,7 +393,8 @@ class Optimize {
         global: undefined,
         'Buffer.isBuffer': undefined,
         Buffer: undefined
-      }
+      },
+      debug: true
     })
 
     /** Browserify exclude */
