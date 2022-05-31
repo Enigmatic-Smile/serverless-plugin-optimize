@@ -45,16 +45,36 @@ class Optimize {
             optimize: {
               type: ['object', 'boolean'],
               properties: {
-                exclude: {type: 'array'},
-                extensions: {type: 'array'},
-                external: {type: 'array'},
-                externalPaths: {type: 'object'},
-                global: {type: 'boolean'},
-                ignore: {type: 'array'},
-                includePaths: {type: 'array'},
-                minify: {type: 'boolean'},
-                plugins: {type: 'array'},
-                presets: {type: 'array'},
+                exclude: {
+                  type: 'array'
+                },
+                extensions: {
+                  type: 'array'
+                },
+                external: {
+                  type: 'array'
+                },
+                externalPaths: {
+                  type: 'object'
+                },
+                global: {
+                  type: 'boolean'
+                },
+                ignore: {
+                  type: 'array'
+                },
+                includePaths: {
+                  type: 'array'
+                },
+                minify: {
+                  type: 'boolean'
+                },
+                plugins: {
+                  type: 'array'
+                },
+                presets: {
+                  type: 'array'
+                }
               }
             }
           }
