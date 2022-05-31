@@ -1,6 +1,6 @@
 Serverless Optimize Plugin
 =============================
-[![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com) 
+[![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)
 [![npm version](https://badge.fury.io/js/serverless-plugin-optimize.svg)](https://badge.fury.io/js/serverless-plugin-optimize)
 [![npm downloads](https://img.shields.io/npm/dm/serverless-plugin-optimize.svg)](https://www.npmjs.com/package/serverless-plugin-optimize)
 [![license](https://img.shields.io/npm/l/serverless-plugin-optimize.svg)](https://raw.githubusercontent.com/FidelLimited/serverless-plugin-optimize/master/LICENSE)
@@ -11,7 +11,7 @@ This plugin is a child of the great [serverless-optimizer-plugin](https://github
 
 **Requirements:**
 * Serverless *v1.12.x* or higher.
-* AWS provider and nodejs4.3/6.10/8.10/10.x/12.x/14.x runtimes
+* AWS provider and nodejs4.3/6.10/8.10/10.x/12.x/14.x/16.x runtimes
 
 ## Setup
 
