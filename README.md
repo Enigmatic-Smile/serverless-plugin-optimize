@@ -1,5 +1,10 @@
+# :no_entry: DEPRECATED :no_entry:
+
+This repository is no longer being maintained. Further developments to this repository can be made by forking the project.
+
 Serverless Optimize Plugin
 =============================
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 [![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com) 
 [![npm version](https://badge.fury.io/js/serverless-plugin-optimize.svg)](https://badge.fury.io/js/serverless-plugin-optimize)
 [![npm downloads](https://img.shields.io/npm/dm/serverless-plugin-optimize.svg)](https://www.npmjs.com/package/serverless-plugin-optimize)
