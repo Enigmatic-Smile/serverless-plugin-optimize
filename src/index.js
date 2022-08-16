@@ -39,16 +39,16 @@ class Optimize {
 
     if (this.serverless.version.startsWith('3')) {
       this.serverless.configSchemaHandler.defineFunctionProperties(
-        'aws',
+        serverless.service.provider.name,
         {
           properties: {
             optimize: {
               type: ['object', 'boolean'],
               properties: {
-                exclude: {
-                  type: 'array'
+                debug: {
+                  type: 'boolean'
                 },
-                extensions: {
+                exclude: {
                   type: 'array'
                 },
                 external: {
@@ -57,13 +57,16 @@ class Optimize {
                 externalPaths: {
                   type: 'object'
                 },
+                extensions: {
+                  type: 'array'
+                },
                 global: {
                   type: 'boolean'
                 },
-                ignore: {
+                includePaths: {
                   type: 'array'
                 },
-                includePaths: {
+                ignore: {
                   type: 'array'
                 },
                 minify: {
@@ -71,6 +74,9 @@ class Optimize {
                 },
                 plugins: {
                   type: 'array'
+                },
+                prefix: {
+                  type: 'string'
                 },
                 presets: {
                   type: 'array'
