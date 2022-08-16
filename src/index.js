@@ -79,7 +79,8 @@ class Optimize {
             targets: {
               node: nodeVersion
             }
-          }]]
+          }]],
+          sourceMaps: false
         }
       }
 
@@ -143,6 +144,11 @@ class Optimize {
         /** Babel presets */
         if (Array.isArray(this.custom.optimize.presets)) {
           this.optimize.options.presets = this.custom.optimize.presets
+        }
+
+        /** Source maps */
+        if (typeof this.custom.optimize.sourceMaps === 'boolean') {
+          this.optimize.options.sourceMaps = this.custom.optimize.sourceMaps
         }
       }
 
@@ -323,7 +329,8 @@ class Optimize {
       ignore: this.optimize.options.ignore,
       minify: this.optimize.options.minify,
       plugins: this.optimize.options.plugins,
-      presets: this.optimize.options.presets
+      presets: this.optimize.options.presets,
+      sourceMaps: this.optimize.options.sourceMaps
     }
 
     if (functionObject.optimize) {
@@ -393,7 +400,8 @@ class Optimize {
         global: undefined,
         'Buffer.isBuffer': undefined,
         Buffer: undefined
-      }
+      },
+      debug: functionOptions.sourceMaps
     })
 
     /** Browserify exclude */
