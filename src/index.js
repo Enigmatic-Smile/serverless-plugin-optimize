@@ -38,6 +38,7 @@ class Optimize {
     this.custom = this.serverless.service.custom
 
     if (this.serverless.version.startsWith('3')) {
+      const arrayOfStringsSchema = { type: 'array', items: { type: 'string' } };
       this.serverless.configSchemaHandler.defineFunctionProperties(
         serverless.service.provider.name,
         {
@@ -49,31 +50,31 @@ class Optimize {
                   type: 'boolean'
                 },
                 exclude: {
-                  type: 'array'
+                  type: arrayOfStringsSchema
                 },
                 external: {
-                  type: 'array'
+                  type: arrayOfStringsSchema
                 },
                 externalPaths: {
                   type: 'object'
                 },
                 extensions: {
-                  type: 'array'
+                  type: arrayOfStringsSchema
                 },
                 global: {
                   type: 'boolean'
                 },
                 includePaths: {
-                  type: 'array'
+                  type: arrayOfStringsSchema
                 },
                 ignore: {
-                  type: 'array'
+                  type: arrayOfStringsSchema
                 },
                 minify: {
                   type: 'boolean'
                 },
                 plugins: {
-                  type: 'array'
+                  type: arrayOfStringsSchema
                 },
                 prefix: {
                   type: 'string'
