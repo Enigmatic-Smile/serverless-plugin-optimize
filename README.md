@@ -16,7 +16,7 @@ This plugin is a child of the great [serverless-optimizer-plugin](https://github
 
 **Requirements:**
 * Serverless *v1.12.x* or higher.
-* AWS provider and nodejs4.3/6.10/8.10/10.x/12.x/14.x runtimes
+* AWS provider and nodejs4.3/6.10/8.10/10.x/12.x/14.x/16.x runtimes
 
 ## Setup
 

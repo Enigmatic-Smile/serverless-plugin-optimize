@@ -37,6 +37,57 @@ class Optimize {
     this.options = options
     this.custom = this.serverless.service.custom
 
+    if (this.serverless.version.startsWith('3')) {
+      this.serverless.configSchemaHandler.defineFunctionProperties(
+        serverless.service.provider.name,
+        {
+          properties: {
+            optimize: {
+              type: 'object',
+              properties: {
+                debug: {
+                  type: 'boolean'
+                },
+                exclude: {
+                  type: 'array'
+                },
+                external: {
+                  type: 'array'
+                },
+                externalPaths: {
+                  type: 'object'
+                },
+                extensions: {
+                  type: 'array'
+                },
+                global: {
+                  type: 'boolean'
+                },
+                includePaths: {
+                  type: 'array'
+                },
+                ignore: {
+                  type: 'array'
+                },
+                minify: {
+                  type: 'boolean'
+                },
+                plugins: {
+                  type: 'array'
+                },
+                prefix: {
+                  type: 'string'
+                },
+                presets: {
+                  type: 'array'
+                }
+              }
+            }
+          }
+        }
+      )
+    }
+
     this.provider = this.serverless.getProvider('aws')
 
     /** Runtime >=node4.3 */
@@ -46,7 +97,8 @@ class Optimize {
       this.serverless.service.provider.runtime === 'nodejs8.10' ||
       this.serverless.service.provider.runtime === 'nodejs10.x' ||
       this.serverless.service.provider.runtime === 'nodejs12.x' ||
-      this.serverless.service.provider.runtime === 'nodejs14.x')
+      this.serverless.service.provider.runtime === 'nodejs14.x' ||
+      this.serverless.service.provider.runtime === 'nodejs16.x')
 
     /** AWS provider and valid runtime check */
     if (validRunTime) {

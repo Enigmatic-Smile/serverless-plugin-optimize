@@ -1,6 +1,6 @@
 {
   "name": "serverless-plugin-optimize",
-  "version": "4.2.1-rc.1",
+  "version": "5.0.0",
   "description": "Bundle with Browserify, transpile and minify with Babel automatically to your NodeJS runtime compatible JavaScript.",
   "main": "src/index.js",
   "scripts": {
@@ -25,12 +25,12 @@
   },
   "homepage": "https://github.com/FidelLimited/serverless-plugin-optimize#readme",
   "dependencies": {
-    "@babel/core": "^7.1.6",
-    "@babel/preset-env": "^7.1.6",
-    "babel-preset-minify": "^0.5.0",
+    "@babel/core": "^7.18.13",
+    "@babel/preset-env": "^7.18.10",
+    "babel-preset-minify": "^0.5.2",
     "babelify": "^10.0.0",
-    "bluebird": "^3.5.3",
-    "browserify": "^16.2.3",
+    "bluebird": "^3.7.2",
+    "browserify": "^16.5.2",
     "fs-extra": "^7.0.1",
     "resolve-from": "^4.0.0"
   },
