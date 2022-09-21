@@ -46,7 +46,8 @@ class Optimize {
       this.serverless.service.provider.runtime === 'nodejs8.10' ||
       this.serverless.service.provider.runtime === 'nodejs10.x' ||
       this.serverless.service.provider.runtime === 'nodejs12.x' ||
-      this.serverless.service.provider.runtime === 'nodejs14.x')
+      this.serverless.service.provider.runtime === 'nodejs14.x' ||
+      this.serverless.service.provider.runtime === 'nodejs16.x')
 
     /** AWS provider and valid runtime check */
     if (validRunTime) {
