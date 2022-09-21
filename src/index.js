@@ -303,7 +303,7 @@ class Optimize {
     this.serverless.cli.log('Optimize: ' + functionObject.name)
 
     /** Optimize object */
-    let optimize = {
+    const optimize = {
       bundle: functionBundle,
       handlerOriginal: functionObject.handler,
       handlerOptimize: functionOptimizeHandler + functionObject.handler.substring(functionFileIndex),
@@ -314,7 +314,7 @@ class Optimize {
     }
 
     /** Function optimize options */
-    let functionOptions = {
+    const functionOptions = {
       exclude: this.optimize.options.exclude,
       external: this.optimize.options.external,
       externalPaths: Object.assign({}, this.optimize.options.externalPaths),

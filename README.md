@@ -1,6 +1,5 @@
-# :no_entry: DEPRECATED :no_entry:
 
-This repository is no longer being maintained. Further developments to this repository can be made by forking the project.
+This repository is no longer being maintained by Author. Further developments to this repository can be made by forking the project.
 
 Serverless Optimize Plugin
 =============================
