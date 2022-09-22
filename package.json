@@ -1,6 +1,6 @@
 {
-  "name": "serverless-plugin-optimize",
-  "version": "4.3.0-alpha",
+  "name": "serverless-optimize",
+  "version": "1.0.0-alpha",
   "description": "Bundle with Browserify, transpile and minify with Babel automatically to your NodeJS runtime compatible JavaScript.",
   "main": "src/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/0xlocal/serverless-plugin-optimize.git"
+    "url": "git+https://github.com/0xlocal/serverless-optimize.git"
   },
   "keywords": [
     "serverless plugin optimize handler",
@@ -21,9 +21,9 @@
     "optimize lambda"
   ],
   "bugs": {
-    "url": "https://github.com/FidelLimited/serverless-plugin-optimize/issues"
+    "url": "https://github.com/0xlocal/serverless-optimize/issues"
   },
-  "homepage": "https://github.com/FidelLimited/serverless-plugin-optimize#readme",
+  "homepage": "https://github.com/0xlocal/serverless-optimize#readme",
   "dependencies": {
     "@babel/core": "^7.19.1",
     "@babel/preset-env": "^7.19.1",
