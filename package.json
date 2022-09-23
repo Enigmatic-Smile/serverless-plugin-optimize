@@ -1,17 +1,17 @@
 {
-  "name": "serverless-plugin-optimize",
-  "version": "4.2.1-rc.1",
+  "name": "serverless-optimize",
+  "version": "1.0.0-alpha",
   "description": "Bundle with Browserify, transpile and minify with Babel automatically to your NodeJS runtime compatible JavaScript.",
   "main": "src/index.js",
   "scripts": {
     "lint": "node_modules/.bin/standard src/**",
     "lint:fix": "node_modules/.bin/standard --fix src/**"
   },
-  "author": "Gonçalo Neves",
+  "author": "Ferrel John Fernando",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FidelLimited/serverless-plugin-optimize.git"
+    "url": "git+https://github.com/0xlocal/serverless-optimize.git"
   },
   "keywords": [
     "serverless plugin optimize handler",
@@ -21,20 +21,20 @@
     "optimize lambda"
   ],
   "bugs": {
-    "url": "https://github.com/FidelLimited/serverless-plugin-optimize/issues"
+    "url": "https://github.com/0xlocal/serverless-optimize/issues"
   },
-  "homepage": "https://github.com/FidelLimited/serverless-plugin-optimize#readme",
+  "homepage": "https://github.com/0xlocal/serverless-optimize#readme",
   "dependencies": {
-    "@babel/core": "^7.1.6",
-    "@babel/preset-env": "^7.1.6",
-    "babel-preset-minify": "^0.5.0",
+    "@babel/core": "^7.19.1",
+    "@babel/preset-env": "^7.19.1",
+    "babel-preset-minify": "^0.5.2",
     "babelify": "^10.0.0",
-    "bluebird": "^3.5.3",
-    "browserify": "^16.2.3",
-    "fs-extra": "^7.0.1",
-    "resolve-from": "^4.0.0"
+    "bluebird": "^3.7.2",
+    "browserify": "^17.0.0",
+    "fs-extra": "^10.1.0",
+    "resolve-from": "^5.0.0"
   },
   "devDependencies": {
-    "standard": "^12.0.1"
+    "standard": "^17.0.0"
   }
 }
