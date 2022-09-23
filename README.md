@@ -1,37 +1,34 @@
 
-This repository is no longer being maintained by Author. Further developments to this repository can be made by forking the project.
-
 Serverless Optimize Plugin
 =============================
 
-[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 [![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)
-[![npm version](https://badge.fury.io/js/serverless-plugin-optimize.svg)](https://badge.fury.io/js/serverless-plugin-optimize)
-[![npm downloads](https://img.shields.io/npm/dm/serverless-plugin-optimize.svg)](https://www.npmjs.com/package/serverless-plugin-optimize)
-[![license](https://img.shields.io/npm/l/serverless-plugin-optimize.svg)](https://raw.githubusercontent.com/FidelLimited/serverless-plugin-optimize/master/LICENSE)
+[![npm version](https://badge.fury.io/js/serverless-optimize.svg)](https://badge.fury.io/js/serverless-optimize)
+[![npm downloads](https://img.shields.io/npm/dm/serverless-optimize.svg)](https://www.npmjs.com/package/serverless-optimize)
+[![license](https://img.shields.io/github/license/0xlocal/serverless-optimize)](https://raw.githubusercontent.com/0xlocal/serverless-optimize/master/LICENSE)
 
 Bundle with Browserify, transpile and minify with Babel automatically to your NodeJS runtime compatible JavaScript.
 
-This plugin is a child of the great [serverless-optimizer-plugin](https://github.com/serverless/serverless-optimizer-plugin). Kudos!
+This plugin is a continuous version of the great [serverless-plugin-optimize](https://github.com/FidelLimited/serverless-plugin-optimize). Kudos!
 
 **Requirements:**
 
 * Serverless *v1.12.x* or higher.
-* AWS provider and nodejs4.3/6.10/8.10/10.x/12.x/14.x runtimes
+* AWS provider and nodejs4.3/6.10/8.10/10.x/12.x/14.x/16.x runtimes
 
 ## Setup
 
  Install via npm in the root of your Serverless service:
 
 ```
-npm install serverless-plugin-optimize --save-dev
+npm install serverless-optimize --save-dev
 ```
 
 * Add the plugin to the `plugins` array in your Serverless `serverless.yml`:
 
 ```yml
 plugins:
-  - serverless-plugin-optimize
+  - serverless-optimize
 ```
 
 * Set your packages to be built individually to have smaller packages:
