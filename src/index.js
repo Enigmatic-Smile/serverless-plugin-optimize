@@ -1,7 +1,7 @@
 'use strict'
 
 /**
- * @module serverless-plugin-optimize
+ * @module serverless-optimize
  *
  * @see {@link https://serverless.com/framework/docs/providers/aws/guide/plugins/}
  *
